@@ -25,7 +25,10 @@ func _ready():
 	pass # Replace with function body.
 
 
-
+func Test():
+	print("done")
+	set_collision_mask_bit(0,true)
+	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -40,6 +43,15 @@ func _process(delta):
 	else:
 		direction = 0
 	
+	if(Input.is_action_pressed("ui_down") and Input.is_action_just_pressed("ui_accept")):
+		for i in range(get_slide_count()):
+			var col = get_slide_collision(i)
+			if(col.collider).is_in_group("notfloor"):
+				var t = get_tree().create_timer(.3,true)
+				t.connect("timeout",self,"Test",[],CONNECT_ONESHOT)
+				set_collision_mask_bit(0,false)
+				pass
+		pass
 	
 	
 	if(Input.is_action_just_pressed("ui_action") and not controllock):
@@ -102,7 +114,7 @@ func _physics_process(delta):
 	
 		
 	if is_on_floor():
-		if Input.is_action_just_pressed("ui_accept") and not controllock:
+		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
 			$SFXJump.play()
 			velocity.y = JUMP_STRENGTH
 		
