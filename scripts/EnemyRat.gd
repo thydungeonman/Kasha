@@ -1,6 +1,6 @@
 extends KinematicBody2D
  
-export var direction = -1
+var direction = -1
 export(int) var GRAVITY = 10
 export var speed = 50
  
@@ -8,8 +8,13 @@ var hitstun = 0
 var health = 1
 var stunned = false
 var dead = false
+
 export var knockback_velocity_stunned = Vector2(100,-150)
 export var knockback_velocity_killed = Vector2(150,-200)
+
+export var knockback_deceleration_stunned = 20
+export var knockback_deceleration_killed = 100
+
 var knockbackdirection = 0
 var stuntime = 3.0
 
@@ -26,7 +31,7 @@ func _ready():
 func _physics_process(_delta):
 	velocity.y += GRAVITY
  
-	if is_on_wall(): #hit wall go the other way
+	if is_on_wall() and !stunned: #hit wall go the other way
 		direction *= -1
 		animated_sprite.flip_h = !animated_sprite.flip_h
 	
@@ -39,9 +44,9 @@ func _physics_process(_delta):
 	else: #we're stunned
 		#we are going to want to reduce horizontal velocity each frame
 		if(!dead):
-			velocity.x -= velocity.x/20
+			velocity.x -= velocity.x/knockback_deceleration_stunned
 		else:
-			velocity.x -= velocity.x/50 
+			velocity.x -= velocity.x/knockback_deceleration_killed
 		move_and_slide(global.VX(velocity,knockbackdirection), Vector2.UP)
  
 	
