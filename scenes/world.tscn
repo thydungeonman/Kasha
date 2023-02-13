@@ -140,21 +140,21 @@ position = Vector2( 117, 68.5 )
 shape = SubResource( 5 )
 
 [node name="wall left" type="StaticBody2D" parent="."]
-position = Vector2( 123, 96 )
+position = Vector2( 123, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall left"]
 position = Vector2( -126, 30 )
 shape = SubResource( 12 )
 
 [node name="wall right" type="StaticBody2D" parent="."]
-position = Vector2( 608, 96 )
+position = Vector2( 608, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall right"]
 position = Vector2( -126, 30 )
 shape = SubResource( 12 )
 
 [node name="bottomlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 96 )
+position = Vector2( 123, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneleft"]
 position = Vector2( -27, 34 )
@@ -162,7 +162,7 @@ shape = SubResource( 6 )
 one_way_collision = true
 
 [node name="bottomlanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 96 )
+position = Vector2( 123, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlanemid"]
 position = Vector2( 101, 34 )
@@ -170,7 +170,7 @@ shape = SubResource( 9 )
 one_way_collision = true
 
 [node name="bottomlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 96 )
+position = Vector2( 123, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneright"]
 position = Vector2( 213, 34 )
@@ -178,7 +178,7 @@ shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="toplaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 33 )
+position = Vector2( 123, 34 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneleft"]
@@ -187,7 +187,7 @@ shape = SubResource( 11 )
 one_way_collision = true
 
 [node name="toplanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 33 )
+position = Vector2( 123, 34 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplanemid"]
@@ -196,7 +196,7 @@ shape = SubResource( 7 )
 one_way_collision = true
 
 [node name="toplaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 33 )
+position = Vector2( 123, 34 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneright"]
@@ -205,7 +205,7 @@ shape = SubResource( 10 )
 one_way_collision = true
 
 [node name="midlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 33 )
+position = Vector2( 123, 34 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneleft"]
 position = Vector2( 21, 65 )
@@ -213,7 +213,7 @@ shape = SubResource( 8 )
 one_way_collision = true
 
 [node name="midlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 380, 33 )
+position = Vector2( 380, 34 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneright"]
 position = Vector2( 36, 65 )
