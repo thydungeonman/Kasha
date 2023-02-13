@@ -25,10 +25,9 @@ func _ready():
 	pass # Replace with function body.
 
 
-func Test():
+func GoThroughFloor():
 	print("done")
 	set_collision_mask_bit(0,true)
-	pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
@@ -48,7 +47,7 @@ func _process(delta):
 			var col = get_slide_collision(i)
 			if(col.collider).is_in_group("notfloor"):
 				var t = get_tree().create_timer(.3,true)
-				t.connect("timeout",self,"Test",[],CONNECT_ONESHOT)
+				t.connect("timeout",self,"GoThroughFloor",[],CONNECT_ONESHOT)
 				set_collision_mask_bit(0,false)
 				pass
 		pass
@@ -147,12 +146,11 @@ func _on_Collision_body_entered(body):
 
 
 func _on_Hurt_body_entered(body):
-	if body.is_in_group("Enemies") and body.is_stunned == false:
+	if body.is_in_group("Enemies") and !body.stunned:
 		print("Ouch!")
-	else:
-		pass # Replace with function body.
+
 
 
 func _on_AnimatedSprite_animation_finished():
 	is_attacking = false
-	pass # Replace with function body.
+

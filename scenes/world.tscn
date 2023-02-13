@@ -1,8 +1,10 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
+[ext_resource path="res://scenes/EnemyRat.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
+[ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
 
 [sub_resource type="ConvexPolygonShape2D" id=3]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -103,23 +105,24 @@ extents = Vector2( 17, 1 )
 extents = Vector2( 32, 1 )
 
 [node name="world" type="Node2D"]
-position = Vector2( 123, 77 )
+script = ExtResource( 5 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
+position = Vector2( 123, 77 )
 
 [node name="Kitchentileset-v1" type="Sprite" parent="."]
-position = Vector2( 117, 29 )
+position = Vector2( 240, 106 )
 texture = ExtResource( 4 )
 
 [node name="TileMap" type="TileMap" parent="."]
-position = Vector2( -3, 3 )
+position = Vector2( 120, 80 )
 tile_set = SubResource( 2 )
 cell_size = Vector2( 8, 8 )
 format = 1
 tile_data = PoolIntArray( 589809, 2, 0, 917491, 2, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
-position = Vector2( -3, -34 )
+position = Vector2( 120, 43 )
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
@@ -129,25 +132,28 @@ limit_right = 480
 limit_bottom = -80
 
 [node name="floor" type="StaticBody2D" parent="."]
+position = Vector2( 123, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
 position = Vector2( 117, 68.5 )
 shape = SubResource( 5 )
 
 [node name="wall left" type="StaticBody2D" parent="."]
+position = Vector2( 123, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall left"]
 position = Vector2( -126, 30 )
 shape = SubResource( 12 )
 
 [node name="wall right" type="StaticBody2D" parent="."]
-position = Vector2( 485, 0 )
+position = Vector2( 608, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall right"]
 position = Vector2( -126, 30 )
 shape = SubResource( 12 )
 
 [node name="bottomlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
+position = Vector2( 123, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneleft"]
 position = Vector2( -27, 34 )
@@ -155,6 +161,7 @@ shape = SubResource( 6 )
 one_way_collision = true
 
 [node name="bottomlanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
+position = Vector2( 123, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlanemid"]
 position = Vector2( 101, 34 )
@@ -162,6 +169,7 @@ shape = SubResource( 9 )
 one_way_collision = true
 
 [node name="bottomlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
+position = Vector2( 123, 77 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneright"]
 position = Vector2( 213, 34 )
@@ -169,7 +177,7 @@ shape = SubResource( 13 )
 one_way_collision = true
 
 [node name="toplaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 0, -63 )
+position = Vector2( 123, 14 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneleft"]
@@ -178,7 +186,7 @@ shape = SubResource( 11 )
 one_way_collision = true
 
 [node name="toplanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 0, -63 )
+position = Vector2( 123, 14 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplanemid"]
@@ -187,7 +195,7 @@ shape = SubResource( 7 )
 one_way_collision = true
 
 [node name="toplaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 0, -63 )
+position = Vector2( 123, 14 )
 collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneright"]
@@ -196,7 +204,7 @@ shape = SubResource( 10 )
 one_way_collision = true
 
 [node name="midlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 0, -63 )
+position = Vector2( 123, 14 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneleft"]
 position = Vector2( 21, 65 )
@@ -204,9 +212,21 @@ shape = SubResource( 8 )
 one_way_collision = true
 
 [node name="midlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 257, -63 )
+position = Vector2( 380, 14 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneright"]
 position = Vector2( 36, 65 )
 shape = SubResource( 14 )
 one_way_collision = true
+
+[node name="EnemyRat" parent="." instance=ExtResource( 3 )]
+position = Vector2( 262, 83 )
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 7.0
+autostart = true
+
+[node name="Position2D" type="Position2D" parent="."]
+position = Vector2( 336, 23 )
+
+[connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
