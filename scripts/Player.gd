@@ -3,6 +3,8 @@ extends KinematicBody2D
 var velocity = Vector2.ZERO
 signal knockback
 
+onready var root = get_node("AnimationTree").get("parameters/playback")
+
 export(int) var JUMP_STRENGTH = -250
 export(int) var GRAVITY = 12
 export(int) var ACCELERATION = 10
@@ -20,8 +22,14 @@ var controllock = false
 var direction = 0  #1 for right -1 for left 0 for not moving
 var facing = 1 #1 for right -1 for left   no such thing as facing 0
 
+var health = 3
+var stunned = false
+var invincibletime = 1.0
+var invincibletimer = 0.0 #might just use a regular timer though
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
+	root.start("idle")
 	pass # Replace with function body.
 
 
@@ -56,13 +64,15 @@ func _process(delta):
 	if(Input.is_action_just_pressed("ui_action") and not controllock):
 		if !is_attacking:
 			is_attacking = true
-			animatedSprite.frame = 0
-			animatedSprite.play("Attack")
+#			animatedSprite.frame = 0
+#			animatedSprite.play("Attack")
 			var attack = preload("res://scenes/Attack.tscn").instance()
 			controllock = true
 			add_child(attack)
 			attack.translate(Vector2(15* facing,0))
 			attack.direction = facing
+			var t = get_tree().create_timer(.4)
+			t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
 		#spawn attack scene 
 
 		#preload will load the scene as soon as this script is loaded
@@ -83,43 +93,53 @@ func _process(delta):
 		#just so the player can't spam attacks over and over
 		
 		
-		pass
+		
 	
 	elif(Input.is_action_just_pressed("ui_action") and !is_on_floor()):
 		var attack = preload("res://scenes/Attack.tscn").instance()
 		add_child(attack)
 		attack.translate(Vector2(15 * facing,0))
-		pass
+		
 	
+	
+	Anims()
+	
+
+func StopAttacking(t):
+	is_attacking = false
+	pass
 
 func _physics_process(delta):
 	apply_gravity()
-#	var input = Vector2.ZERO
-#	input.x = Input.get_action_strength("ui_right") - Input.get_action_strength("ui_left")
+	if(stunned and velocity.x == 0):
+		stunned = false
+		controllock = false
+	
+	
 	
 	
 	if direction == 0:
-		if !is_attacking:
-			animatedSprite.animation = "Idle"
+#		if !is_attacking:
+#			animatedSprite.animation = "Idle"
 		apply_friction();
 	else:
 		apply_acceleration(direction);
-		if !is_attacking:
-			animatedSprite.animation = "Walk"
+#		if !is_attacking:
+#			animatedSprite.animation = "Walk"
 		if direction > 0:
-			animatedSprite.flip_h = false
+			$Sprite.flip_h = false
 		elif direction < 0:
-			animatedSprite.flip_h = true
+			$Sprite.flip_h = true
 	
 		
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
-			$SFXJump.play()
+			global.Play(preload("res://SFX/kashajump.wav"))
 			velocity.y = JUMP_STRENGTH
 		
 	else: 
-		if !is_attacking:
-			animatedSprite.animation = "Jump"
+#		if !is_attacking:
+#			animatedSprite.animation = "Jump"
 		if Input.is_action_just_released("ui_accept") and velocity.y < -150:
 			velocity.y = -150
 			
@@ -147,10 +167,35 @@ func _on_Collision_body_entered(body):
 
 func _on_Hurt_body_entered(body):
 	if body.is_in_group("Enemies") and !body.stunned:
+		return
+		health -= 1
+		controllock = true
+		stunned = true
+		#get collision direction
+		
+		velocity.y = -150
+		velocity.x = -150
 		print("Ouch!")
 
 
 
 func _on_AnimatedSprite_animation_finished():
 	is_attacking = false
+
+func Slide():
+	pass
+
+func Anims():
+	
+	if(is_on_floor()):
+		if(direction == 0):
+			root.travel("idle")
+		else:
+			root.travel("walk")
+	else:
+		root.travel("jump")
+	
+	if(is_attacking):
+		root.travel("attack")
+
 
