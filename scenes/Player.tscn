@@ -1,4 +1,4 @@
-[gd_scene load_steps=34 format=2]
+[gd_scene load_steps=33 format=2]
 
 [ext_resource path="res://sprites/kasha/kasha.png" type="Texture" id=2]
 [ext_resource path="res://sprites/kasha/kashaattacksheet.png" type="Texture" id=3]
@@ -100,33 +100,6 @@ transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 
 graph_offset = Vector2( 9, 57 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
-
-[sub_resource type="Animation" id=24]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ ExtResource( 3 ) ]
-}
-tracks/1/type = "value"
-tracks/1/path = NodePath("Sprite:frame")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0 ),
-"transitions": PoolRealArray( 1 ),
-"update": 0,
-"values": [ 0 ]
-}
 
 [sub_resource type="Animation" id=21]
 resource_name = "attack"
@@ -351,7 +324,7 @@ animation = "Attack"
 frame = 1
 
 [node name="Sprite" type="Sprite" parent="."]
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 2.5 )
@@ -376,7 +349,6 @@ active = true
 parameters/playback = SubResource( 19 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/RESET = SubResource( 24 )
 anims/attack = SubResource( 21 )
 anims/idle = SubResource( 22 )
 anims/jump = SubResource( 23 )
