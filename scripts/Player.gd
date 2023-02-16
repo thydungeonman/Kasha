@@ -4,6 +4,7 @@ var velocity = Vector2.ZERO
 signal knockback
 
 onready var root = get_node("AnimationTree").get("parameters/playback")
+onready var flashroot = get_node("AnimationTree2").get("parameters/playback")
 
 export(int) var JUMP_STRENGTH = -250
 export(int) var GRAVITY = 12
@@ -22,14 +23,15 @@ var controllock = false
 var direction = 0  #1 for right -1 for left 0 for not moving
 var facing = 1 #1 for right -1 for left   no such thing as facing 0
 
-var health = 3
+export var health = 3
 var stunned = false
-var invincibletime = 1.0
+export var invincibletime = .5
 var invincibletimer = 0.0 #might just use a regular timer though
-
+var invincible = false
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	root.start("idle")
+	flashroot.start("RESET")
 	pass # Replace with function body.
 
 
@@ -37,7 +39,7 @@ func GoThroughFloor():
 	print("done")
 	set_collision_mask_bit(0,true)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
+var t
 func _process(delta):
 	
 	
@@ -54,7 +56,7 @@ func _process(delta):
 		for i in range(get_slide_count()):
 			var col = get_slide_collision(i)
 			if(col.collider).is_in_group("notfloor"):
-				var t = get_tree().create_timer(.3,true)
+				t = get_tree().create_timer(.3,true)
 				t.connect("timeout",self,"GoThroughFloor",[],CONNECT_ONESHOT)
 				set_collision_mask_bit(0,false)
 				pass
@@ -71,7 +73,7 @@ func _process(delta):
 			add_child(attack)
 			attack.translate(Vector2(15* facing,0))
 			attack.direction = facing
-			var t = get_tree().create_timer(.4)
+			t = get_tree().create_timer(.4)
 			t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
 		#spawn attack scene 
 
@@ -107,13 +109,21 @@ func _process(delta):
 
 func StopAttacking(t):
 	is_attacking = false
-	pass
+	
+
+func StopInvincible():
+	invincible = false
+	$invinciblelabel.hide()
+	flashroot.travel("RESET")
 
 func _physics_process(delta):
 	apply_gravity()
+	
 	if(stunned and velocity.x == 0):
 		stunned = false
 		controllock = false
+		t = get_tree().create_timer(invincibletime)
+		t.connect("timeout",self,"StopInvincible",[],CONNECT_ONESHOT)
 	
 	
 	
@@ -153,7 +163,10 @@ func apply_gravity():
 	velocity.y += GRAVITY
 
 func apply_friction():
-	velocity.x = move_toward(velocity.x, 0, FRICTION)
+	if(!stunned):
+		velocity.x = move_toward(velocity.x, 0, FRICTION)
+	else:
+		velocity.x = move_toward(velocity.x,0,2.5)
 	pass
 
 func apply_acceleration(AccelValue):
@@ -166,16 +179,24 @@ func _on_Collision_body_entered(body):
 
 
 func _on_Hurt_body_entered(body):
-	if body.is_in_group("Enemies") and !body.stunned:
-		return
+	if body.is_in_group("Enemies") and !body.stunned and !invincible:
+		
 		health -= 1
+		if(health <= 0):
+			global.Play(preload("res://SFX/kashadeath.wav"))
+		else:
+			global.Play(preload("res://SFX/kashahurt.wav"))
 		controllock = true
 		stunned = true
-		#get collision direction
-		
+		#get reverse collision direction
+		var hurtdirection = sign(global_position.x - body.global_position.x)
+		print(hurtdirection)
 		velocity.y = -150
-		velocity.x = -150
-		print("Ouch!")
+		velocity.x = 100 * hurtdirection
+		invincible = true
+		$invinciblelabel.show()
+		flashroot.travel("flash")
+#		print("Ouch!")
 
 
 

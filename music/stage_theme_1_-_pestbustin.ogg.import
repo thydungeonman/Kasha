@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/stage_theme_1_-_pestbustin.ogg-cae7662d6800ffad71e582d4f3206df1.oggstr"
+
+[deps]
+
+source_file="res://music/stage_theme_1_-_pestbustin.ogg"
+dest_files=[ "res://.import/stage_theme_1_-_pestbustin.ogg-cae7662d6800ffad71e582d4f3206df1.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=4.0

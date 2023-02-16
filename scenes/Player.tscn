@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://sprites/kasha/kasha.png" type="Texture" id=2]
 [ext_resource path="res://sprites/kasha/kashaattacksheet.png" type="Texture" id=3]
@@ -97,9 +97,24 @@ states/jump/position = Vector2( 746, 71 )
 states/walk/node = SubResource( 29 )
 states/walk/position = Vector2( 1026, 248 )
 transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ) ]
-graph_offset = Vector2( 9, 57 )
+graph_offset = Vector2( 148, -91 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
+
+[sub_resource type="Animation" id=38]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0, 0, 0, 1 ) ]
+}
 
 [sub_resource type="Animation" id=21]
 resource_name = "attack"
@@ -152,6 +167,24 @@ tracks/3/keys = {
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
 "values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=39]
+resource_name = "flash"
+length = 0.3
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 1 ) ]
 }
 
 [sub_resource type="Animation" id=22]
@@ -312,6 +345,59 @@ tracks/3/keys = {
 "values": [ ExtResource( 4 ) ]
 }
 
+[sub_resource type="Animation" id=40]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=41]
+resource_name = "flash"
+length = 0.3
+loop = true
+step = 0.15
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ Color( 1, 1, 1, 1 ), Color( 0, 0, 0, 1 ) ]
+}
+
+[sub_resource type="AnimationNodeAnimation" id=42]
+animation = "RESET"
+
+[sub_resource type="AnimationNodeAnimation" id=43]
+animation = "flash"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=44]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=45]
+switch_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id=46]
+states/RESET/node = SubResource( 42 )
+states/RESET/position = Vector2( 567, 157 )
+states/flash/node = SubResource( 43 )
+states/flash/position = Vector2( 567, 42 )
+transitions = [ "RESET", "flash", SubResource( 44 ), "flash", "RESET", SubResource( 45 ) ]
+
+[sub_resource type="AnimationNodeStateMachinePlayback" id=47]
+
 [node name="Player" type="KinematicBody2D" groups=["Players"]]
 collision_layer = 2
 collision_mask = 13
@@ -349,10 +435,31 @@ active = true
 parameters/playback = SubResource( 19 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 38 )
 anims/attack = SubResource( 21 )
+anims/flash = SubResource( 39 )
 anims/idle = SubResource( 22 )
 anims/jump = SubResource( 23 )
 anims/walk = SubResource( 25 )
+
+[node name="invinciblelabel" type="Label" parent="."]
+visible = false
+margin_left = -10.0
+margin_top = -25.0
+margin_right = 30.0
+margin_bottom = -11.0
+rect_scale = Vector2( 0.5, 0.5 )
+text = "invincible"
+
+[node name="AnimationPlayer2" type="AnimationPlayer" parent="."]
+anims/RESET = SubResource( 40 )
+anims/flash = SubResource( 41 )
+
+[node name="AnimationTree2" type="AnimationTree" parent="."]
+tree_root = SubResource( 46 )
+anim_player = NodePath("../AnimationPlayer2")
+active = true
+parameters/playback = SubResource( 47 )
 
 [connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="body_entered" from="Collision" to="." method="_on_Collision_body_entered"]
