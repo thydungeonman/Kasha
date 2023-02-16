@@ -61,7 +61,7 @@ func TrueVelocity():
 #so we know which direction the rat was hit from
 func Damage(direction):
 	if(!stunned): #if we aren't stunned when we are hit
-		global.Play(preload("res://SFX/enemystun.wav"))
+		global.Play(preload("res://SFX/enemyhurt.wav"))
 		stunned = true
 		velocity = knockback_velocity_stunned
 		knockbackdirection = direction
@@ -79,7 +79,7 @@ func _on_Timer_timeout():
  
 func _on_StunHurtbox_body_entered(body):
 	if stunned and body.is_in_group("Players"):
-		global.Play(preload("res://SFX/enemyhurt.wav"))
+		global.Play(preload("res://SFX/enemydeath.wav"))
 		dead = true
 		knockbackdirection = sign(global_position.x - body.global_position.x) 
 		velocity = knockback_velocity_killed
