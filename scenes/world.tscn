@@ -230,4 +230,8 @@ autostart = true
 [node name="Position2D" type="Position2D" parent="."]
 position = Vector2( 336, 23 )
 
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+volume_db = -15.0
+autoplay = true
+
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]

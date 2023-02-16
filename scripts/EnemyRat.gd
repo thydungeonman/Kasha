@@ -26,6 +26,8 @@ onready var timer = $Timer
  
 func _ready():
 	# Set this on the node directly
+	
+	
 	timer.set_wait_time(stuntime)
  
 func _physics_process(_delta):

@@ -1,7 +1,11 @@
 extends Node2D
 
+onready var music = get_node("AudioStreamPlayer")
 
 func _ready():
+	randomize()
+	music.stream = load(global.songs[randi() % global.songs.size() ])
+	music.play()
 	pass # Replace with function body.
 
 

@@ -3,6 +3,8 @@ extends Node
 var musicvolume = 0.0
 var sfxvolume = 0.0
 
+var songs = ["res://music/stagetheme1.wav", "res://music/stagetheme2.wav"]
+
 
 func _ready():
 	pass # Replace with function body.
