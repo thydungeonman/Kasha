@@ -1,0 +1,15 @@
+[gd_scene format=2]
+
+[node name="UI" type="CanvasLayer"]
+
+[node name="score" type="Label" parent="."]
+margin_left = 1.0
+margin_right = 41.0
+margin_bottom = 14.0
+text = "0"
+
+[node name="time" type="Label" parent="."]
+margin_left = 137.0
+margin_right = 177.0
+margin_bottom = 14.0
+text = "60"

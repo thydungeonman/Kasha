@@ -23,12 +23,13 @@ var controllock = false
 var direction = 0  #1 for right -1 for left 0 for not moving
 var facing = 1 #1 for right -1 for left   no such thing as facing 0
 
-export var health = 3
+export var health = 4
 var stunned = false
 export var invincibletime = .5
 var invincibletimer = 0.0 #might just use a regular timer though
 var invincible = false
-# Called when the node enters the scene tree for the first time.
+
+
 func _ready():
 	root.start("idle")
 	flashroot.start("RESET")

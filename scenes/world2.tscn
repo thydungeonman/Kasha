@@ -1,11 +1,12 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
-[ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
+[ext_resource path="res://scripts/world2.gd" type="Script" id=5]
 [ext_resource path="res://music/stagetheme2.wav" type="AudioStream" id=6]
 [ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=7]
+[ext_resource path="res://scenes/hole.tscn" type="PackedScene" id=8]
 
 [sub_resource type="ConvexPolygonShape2D" id=3]
 points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
@@ -124,6 +125,7 @@ tile_data = PoolIntArray( 589809, 2, 0, 917491, 2, 0 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 120, 43 )
+MAX_SPEED = 100
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 current = true
@@ -227,16 +229,50 @@ one_way_collision = true
 wait_time = 2.0
 autostart = true
 
-[node name="Position2D" type="Position2D" parent="."]
-position = Vector2( 336, 23 )
+[node name="spawn1" type="Position2D" parent="."]
+position = Vector2( 336, 61 )
+
+[node name="spawn2" type="Position2D" parent="."]
+position = Vector2( 220, 58 )
+
+[node name="spawn3" type="Position2D" parent="."]
+position = Vector2( 91, 61 )
+
+[node name="foodspawn" type="Position2D" parent="."]
+position = Vector2( 72, 124 )
+
+[node name="foodspawn2" type="Position2D" parent="."]
+position = Vector2( 72, 124 )
+
+[node name="foodspawn3" type="Position2D" parent="."]
+position = Vector2( 279, 126 )
+
+[node name="foodspawn4" type="Position2D" parent="."]
+position = Vector2( 356, 64 )
+
+[node name="foodspawn5" type="Position2D" parent="."]
+position = Vector2( 238, 160 )
+
+[node name="foodspawn6" type="Position2D" parent="."]
+position = Vector2( 439, 97 )
+
+[node name="foodspawn7" type="Position2D" parent="."]
+position = Vector2( 116, 161 )
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 6 )
 volume_db = -15.0
 autoplay = true
 
+[node name="hole" parent="." instance=ExtResource( 8 )]
+position = Vector2( 7, 160 )
+
+[node name="hole2" parent="." instance=ExtResource( 8 )]
+position = Vector2( 474, 162 )
+
 [node name="roundtime" type="Timer" parent="."]
 wait_time = 45.0
+autostart = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]

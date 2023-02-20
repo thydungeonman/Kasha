@@ -1,5 +1,7 @@
 extends KinematicBody2D
- 
+
+signal died
+
 var direction = -1
 export(int) var GRAVITY = 10
 export var speed = 50
@@ -23,11 +25,14 @@ var velocity = Vector2()
 onready var animated_sprite = $AnimatedSprite
 # get_node("Foo") and $Foo are the same thing, one is just shorthand for the other.
 onready var timer = $Timer
+
+var gotthing = false
  
 func _ready():
 	# Set this on the node directly
 	
-	
+	if(randi() % 2 == 1):
+		Flip()
 	timer.set_wait_time(stuntime)
  
 func _physics_process(_delta):
@@ -88,6 +93,7 @@ func _on_StunHurtbox_body_entered(body):
 		get_tree().create_tween().tween_property(animated_sprite,"rotation_degrees",-480.0,1.0)
 		
 		TurnOffCollision()
+		emit_signal("died")
 		
  
 func _on_Attack_knockback():
