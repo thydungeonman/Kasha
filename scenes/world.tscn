@@ -1,7 +1,8 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=21 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
+[ext_resource path="res://scenes/milkshake.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
 [ext_resource path="res://music/stagetheme2.wav" type="AudioStream" id=6]
@@ -237,6 +238,9 @@ autoplay = true
 
 [node name="roundtime" type="Timer" parent="."]
 wait_time = 45.0
+
+[node name="milkshake" parent="." instance=ExtResource( 3 )]
+position = Vector2( 311, 152 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]

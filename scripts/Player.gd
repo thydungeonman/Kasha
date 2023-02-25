@@ -15,6 +15,8 @@ export(int) var MAX_SPEED = 70
 onready var animatedSprite = $AnimatedSprite
 
 var is_attacking = false
+var rapid_attacking = false
+var pressing_attack = false
 
 var knockback_dir = Vector2()
 var knockback_wait = 30
@@ -28,6 +30,16 @@ var stunned = false
 export var invincibletime = .5
 var invincibletimer = 0.0 #might just use a regular timer though
 var invincible = false
+
+var powerinvincible = false
+export var powerinvincibletime = 12
+var dontstop = false
+
+
+#might do a different thing where it just checks when the timer is up if you pressed attack before the timer is up to see of it should attack again
+
+
+
 
 
 func _ready():
@@ -67,15 +79,27 @@ func _process(delta):
 	if(Input.is_action_just_pressed("ui_action") and not controllock):
 		if !is_attacking:
 			is_attacking = true
-#			animatedSprite.frame = 0
-#			animatedSprite.play("Attack")
 			var attack = preload("res://scenes/Attack.tscn").instance()
 			controllock = true
 			add_child(attack)
 			attack.translate(Vector2(15* facing,0))
 			attack.direction = facing
 			t = get_tree().create_timer(.4)
-			t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
+			t.connect("timeout",self,"StopAttacking",[],CONNECT_ONESHOT)
+	elif(Input.is_action_just_pressed("ui_action") and controllock):
+		if(is_attacking):
+			if(rapid_attacking): #we're tapping attack
+				dontstop = true
+				pass
+			rapid_attacking = true
+			var attack = preload("res://scenes/Attack.tscn").instance()
+			controllock = true
+			add_child(attack)
+			attack.translate(Vector2(15* facing,0))
+			attack.direction = facing
+			t = get_tree().create_timer(.8)
+			t.connect("timeout",self,"StopRapidAttacking",[],CONNECT_ONESHOT)
+			
 		#spawn attack scene 
 
 		#preload will load the scene as soon as this script is loaded
@@ -108,9 +132,14 @@ func _process(delta):
 	Anims()
 	
 
-func StopAttacking(t):
-	is_attacking = false
+func StopAttacking():
+	if(!rapid_attacking):
+		is_attacking = false
 	
+func StopRapidAttacking():
+	if(!dontstop):
+		is_attacking = false
+		rapid_attacking = false
 
 func StopInvincible():
 	invincible = false
@@ -158,8 +187,6 @@ func _physics_process(delta):
 	velocity = move_and_slide(velocity, Vector2.UP)
 
 
-
-
 func apply_gravity():
 	velocity.y += GRAVITY
 
@@ -180,8 +207,7 @@ func _on_Collision_body_entered(body):
 
 
 func _on_Hurt_body_entered(body):
-	if body.is_in_group("Enemies") and !body.stunned and !invincible:
-		
+	if body.is_in_group("Enemies") and !body.stunned and !invincible and !powerinvincible:
 		health -= 1
 		if(health <= 0):
 			global.Play(preload("res://SFX/kashadeath.wav"))
@@ -198,6 +224,11 @@ func _on_Hurt_body_entered(body):
 		$invinciblelabel.show()
 		flashroot.travel("flash")
 #		print("Ouch!")
+	elif(body.is_in_group("Enemies") and !body.stunned and powerinvincible):
+		body.Damage(direction)
+	elif(body.is_in_group("powerup")):
+		PowerUpInvincible()
+		body.queue_free()
 
 
 
@@ -219,5 +250,29 @@ func Anims():
 	
 	if(is_attacking):
 		root.travel("attack")
+		if(rapid_attacking):
+			root.travel("attack rapid")
 
 
+var playbackpos = 0.0
+var oldstream = null
+func PowerUpInvincible():
+	powerinvincible = true
+	flashroot.travel("flash")
+	var t = get_tree().create_timer(powerinvincibletime,false)
+	t.connect("timeout",self,"PowerUpInvincibleDone",[],CONNECT_ONESHOT)
+	playbackpos = get_parent().music.get_playback_position()
+	oldstream = get_parent().music.stream
+	get_parent().music.set_stream(preload("res://music/invincibility.wav"))
+	get_parent().music.play()
+	
+
+func PowerUpInvincibleDone():
+	powerinvincible = false
+	flashroot.travel("RESET")
+	get_parent().music.stream = oldstream
+	print(str(playbackpos))
+	
+	get_parent().music.play()
+	get_parent().music.seek(playbackpos)
+	
