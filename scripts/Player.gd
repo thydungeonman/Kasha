@@ -1,5 +1,7 @@
 extends KinematicBody2D
 
+
+
 var velocity = Vector2.ZERO
 signal knockback
 
@@ -12,7 +14,6 @@ export(int) var ACCELERATION = 10
 export(int) var FRICTION = 10
 export(int) var MAX_SPEED = 70
 
-onready var animatedSprite = $AnimatedSprite
 
 var is_attacking = false
 var rapid_attacking = false
@@ -36,9 +37,8 @@ export var powerinvincibletime = 12
 var dontstop = false
 
 
-#might do a different thing where it just checks when the timer is up if you pressed attack before the timer is up to see of it should attack again
-
-
+#might do a different thing where it just checks when the timer is up if you pressed attack
+# before the timer is up to see of it should attack again
 
 
 
@@ -72,69 +72,63 @@ func _process(delta):
 				t = get_tree().create_timer(.3,true)
 				t.connect("timeout",self,"GoThroughFloor",[],CONNECT_ONESHOT)
 				set_collision_mask_bit(0,false)
-				pass
-		pass
+				
 	
-	
-	if(Input.is_action_just_pressed("ui_action") and not controllock):
-		if !is_attacking:
-			is_attacking = true
-			var attack = preload("res://scenes/Attack.tscn").instance()
-			controllock = true
-			add_child(attack)
-			attack.translate(Vector2(15* facing,0))
-			attack.direction = facing
-			t = get_tree().create_timer(.4)
-			t.connect("timeout",self,"StopAttacking",[],CONNECT_ONESHOT)
-	elif(Input.is_action_just_pressed("ui_action") and controllock):
-		if(is_attacking):
-			if(rapid_attacking): #we're tapping attack
-				dontstop = true
-				pass
-			rapid_attacking = true
-			var attack = preload("res://scenes/Attack.tscn").instance()
-			controllock = true
-			add_child(attack)
-			attack.translate(Vector2(15* facing,0))
-			attack.direction = facing
-			t = get_tree().create_timer(.8)
-			t.connect("timeout",self,"StopRapidAttacking",[],CONNECT_ONESHOT)
-			
-		#spawn attack scene 
-
-		#preload will load the scene as soon as this script is loaded
-		#good for things like attacks and bullets, small things
-		
-		
-		#we attach the attack hit box to kasha
-		#when a child is added it always goes to Vector2(0,0)  so right on top of its parent
-		#we want the hit box to face the right direction so we move it to where we want
-		
-		
-		#15 is just an arbitrary number
-		#adjust the distance out from the player and the size of the hit box as you want
-		
-		
-		#eventually you should have a timer that resets to 0 when an attack is made
-		#and you can't attack until the timer is at least however long, maybe half a second or more
-		#just so the player can't spam attacks over and over
-		
-		
-		
-	
-	elif(Input.is_action_just_pressed("ui_action") and !is_on_floor()):
-		var attack = preload("res://scenes/Attack.tscn").instance()
-		add_child(attack)
-		attack.translate(Vector2(15 * facing,0))
-		
-	
+	Attacks(delta)
 	
 	Anims()
 	
 
-func StopAttacking():
-	if(!rapid_attacking):
-		is_attacking = false
+var attacking = false
+var pressedattack = false
+var rapidattacking = false
+var attack = null
+var movelock = false
+
+#complete rework of attacking
+func Attacks(delta):
+	if(Input.is_action_just_pressed("ui_action")):
+		if(attacking):
+			pressedattack = true
+			movelock = true
+		else:
+			SpawnAttack()
+			var t = Timer.new()
+			t.wait_time = .4
+			t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
+			add_child(t)
+			t.start()
+			attacking = true
+			
+			
+
+func SpawnAttack():
+	attack = preload("res://scenes/Attack.tscn").instance()
+	controllock = true
+	add_child(attack)
+	attack.translate(Vector2(15 * facing,0))
+	attack.direction = facing
+
+
+func StopAttacking(tim):
+	#if we havent pressed the attack button since attack started then stop attacking and rapid attacking
+	#else we will start to rapid attack
+	tim.queue_free()
+	if(pressedattack):
+		SpawnAttack()
+		var t = Timer.new()
+		t.wait_time = .25
+		t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
+		add_child(t)
+		t.start()
+		rapidattacking = true
+		pressedattack = false
+		pass
+	else:
+		attacking = false
+		movelock = false
+		pass
+	pass
 	
 func StopRapidAttacking():
 	if(!dontstop):
@@ -154,8 +148,6 @@ func _physics_process(delta):
 		controllock = false
 		t = get_tree().create_timer(invincibletime)
 		t.connect("timeout",self,"StopInvincible",[],CONNECT_ONESHOT)
-	
-	
 	
 	
 	if direction == 0:
@@ -197,8 +189,10 @@ func apply_friction():
 		velocity.x = move_toward(velocity.x,0,2.5)
 	pass
 
-func apply_acceleration(AccelValue):
-	velocity.x = move_toward(velocity.x, MAX_SPEED * AccelValue, ACCELERATION)
+func apply_acceleration(movedirection):
+	if(movelock):
+		movedirection = 0
+	velocity.x = move_toward(velocity.x, MAX_SPEED * movedirection, ACCELERATION)
 	pass
 
 
@@ -232,8 +226,7 @@ func _on_Hurt_body_entered(body):
 
 
 
-func _on_AnimatedSprite_animation_finished():
-	is_attacking = false
+
 
 func Slide():
 	pass
@@ -248,31 +241,39 @@ func Anims():
 	else:
 		root.travel("jump")
 	
-	if(is_attacking):
+	if(attacking):
 		root.travel("attack")
-		if(rapid_attacking):
+		if(rapidattacking):
 			root.travel("attack rapid")
 
 
 var playbackpos = 0.0
-var oldstream = null
+var oldsong = null
+var ti
 func PowerUpInvincible():
+	if(ti != null):
+		ti.queue_free()
+		ti = null
 	powerinvincible = true
 	flashroot.travel("flash")
-	var t = get_tree().create_timer(powerinvincibletime,false)
-	t.connect("timeout",self,"PowerUpInvincibleDone",[],CONNECT_ONESHOT)
-	playbackpos = get_parent().music.get_playback_position()
-	oldstream = get_parent().music.stream
-	get_parent().music.set_stream(preload("res://music/invincibility.wav"))
-	get_parent().music.play()
+	ti = Timer.new()
+	add_child(ti)
+	ti.wait_time = powerinvincibletime
+	ti.connect("timeout",self,"PowerUpInvincibleDone",[],CONNECT_ONESHOT)
+	ti.start()
+	if(global.currentsong != global.SONGS.INVIN):
+		oldsong = global.currentsong
+	playbackpos = global.music.get_playback_position()
+	global.PlaySong(global.SONGS.INVIN)
 	
 
 func PowerUpInvincibleDone():
+	ti.queue_free()
+	ti = null
 	powerinvincible = false
 	flashroot.travel("RESET")
-	get_parent().music.stream = oldstream
+	global.PlaySong(oldsong)
+	global.music.seek(playbackpos)
 	print(str(playbackpos))
-	
-	get_parent().music.play()
-	get_parent().music.seek(playbackpos)
+
 	

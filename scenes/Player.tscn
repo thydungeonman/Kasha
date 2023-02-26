@@ -1,58 +1,7 @@
-[gd_scene load_steps=48 format=2]
+[gd_scene load_steps=42 format=2]
 
 [ext_resource path="res://sprites/kashaspritesheet-full.png" type="Texture" id=1]
-[ext_resource path="res://sprites/kasha/kasha.png" type="Texture" id=2]
-[ext_resource path="res://sprites/kasha/kashaattacksheet.png" type="Texture" id=3]
-[ext_resource path="res://sprites/kasha/kashawalksheet.png" type="Texture" id=4]
-[ext_resource path="res://sprites/kasha/kashaspritesheet4.png" type="Texture" id=5]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=6]
-
-[sub_resource type="AtlasTexture" id=12]
-atlas = ExtResource( 3 )
-region = Rect2( 0, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=13]
-atlas = ExtResource( 3 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=14]
-atlas = ExtResource( 3 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=15]
-atlas = ExtResource( 3 )
-region = Rect2( 96, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=16]
-atlas = ExtResource( 4 )
-region = Rect2( 32, 0, 32, 32 )
-
-[sub_resource type="AtlasTexture" id=17]
-atlas = ExtResource( 4 )
-region = Rect2( 64, 0, 32, 32 )
-
-[sub_resource type="SpriteFrames" id=9]
-animations = [ {
-"frames": [ SubResource( 12 ), SubResource( 13 ), SubResource( 14 ), SubResource( 15 ) ],
-"loop": true,
-"name": "Attack",
-"speed": 12.0
-}, {
-"frames": [ ExtResource( 2 ) ],
-"loop": false,
-"name": "Idle",
-"speed": 5.0
-}, {
-"frames": [ ExtResource( 5 ) ],
-"loop": false,
-"name": "Jump",
-"speed": 5.0
-}, {
-"frames": [ SubResource( 16 ), SubResource( 17 ) ],
-"loop": true,
-"name": "Walk",
-"speed": 10.0
-} ]
 
 [sub_resource type="RectangleShape2D" id=10]
 extents = Vector2( 3, 7.5 )
@@ -62,6 +11,9 @@ extents = Vector2( 4, 7 )
 
 [sub_resource type="AnimationNodeAnimation" id=49]
 animation = "attack rapid"
+
+[sub_resource type="AnimationNodeAnimation" id=52]
+animation = "attack rapid2"
 
 [sub_resource type="AnimationNodeAnimation" id=26]
 animation = "attack"
@@ -96,19 +48,31 @@ switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=51]
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=53]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=54]
+switch_mode = 2
+auto_advance = true
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=55]
+
 [sub_resource type="AnimationNodeStateMachine" id=18]
 states/attack/node = SubResource( 26 )
 states/attack/position = Vector2( 930, 19 )
 "states/attack rapid/node" = SubResource( 49 )
-"states/attack rapid/position" = Vector2( 1226, 110 )
+"states/attack rapid/position" = Vector2( 1168, 19 )
+"states/attack rapid2/node" = SubResource( 52 )
+"states/attack rapid2/position" = Vector2( 1437, 19 )
 states/idle/node = SubResource( 27 )
 states/idle/position = Vector2( 746, 277 )
 states/jump/node = SubResource( 28 )
-states/jump/position = Vector2( 746, 71 )
+states/jump/position = Vector2( 650, 72 )
 states/walk/node = SubResource( 29 )
-states/walk/position = Vector2( 1026, 248 )
-transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ), "attack", "attack rapid", SubResource( 50 ), "attack rapid", "idle", SubResource( 51 ) ]
-graph_offset = Vector2( 280, -3 )
+states/walk/position = Vector2( 1147, 261 )
+transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ), "attack", "attack rapid", SubResource( 50 ), "attack rapid", "idle", SubResource( 51 ), "attack rapid", "attack rapid2", SubResource( 53 ), "attack rapid2", "attack rapid", SubResource( 54 ), "attack rapid2", "idle", SubResource( 55 ) ]
+graph_offset = Vector2( 234, -157 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
 
@@ -230,8 +194,7 @@ tracks/3/keys = {
 
 [sub_resource type="Animation" id=48]
 resource_name = "attack rapid"
-length = 0.581
-loop = true
+length = 0.249
 step = 0.083
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:texture")
@@ -276,10 +239,63 @@ tracks/3/loop_wrap = true
 tracks/3/imported = false
 tracks/3/enabled = true
 tracks/3/keys = {
-"times": PoolRealArray( 0, 0.083, 0.166, 0.249, 0.332, 0.415, 0.498 ),
-"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.083, 0.166 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ 10, 11, 12, 6, 7, 8, 9 ]
+"values": [ 10, 11, 12 ]
+}
+
+[sub_resource type="Animation" id=56]
+resource_name = "attack rapid2"
+length = 0.332
+step = 0.083
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ ExtResource( 1 ) ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 13 ]
+}
+tracks/2/type = "value"
+tracks/2/path = NodePath("Sprite:vframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 1 ]
+}
+tracks/3/type = "value"
+tracks/3/path = NodePath("Sprite:frame")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/keys = {
+"times": PoolRealArray( 0, 0.083, 0.166, 0.249 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 6, 7, 8, 9 ]
 }
 
 [sub_resource type="Animation" id=39]
@@ -516,12 +532,6 @@ collision_layer = 2
 collision_mask = 13
 script = ExtResource( 6 )
 
-[node name="AnimatedSprite" type="AnimatedSprite" parent="."]
-visible = false
-frames = SubResource( 9 )
-animation = "Attack"
-frame = 1
-
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 hframes = 13
@@ -552,11 +562,11 @@ parameters/playback = SubResource( 19 )
 anims/RESET = SubResource( 38 )
 anims/attack = SubResource( 21 )
 "anims/attack rapid" = SubResource( 48 )
+"anims/attack rapid2" = SubResource( 56 )
 anims/flash = SubResource( 39 )
 anims/idle = SubResource( 22 )
 anims/jump = SubResource( 23 )
 anims/walk = SubResource( 25 )
-blend_times = [ "attack", "attack rapid", 0.4 ]
 
 [node name="invinciblelabel" type="Label" parent="."]
 visible = false
@@ -577,6 +587,5 @@ anim_player = NodePath("../AnimationPlayer2")
 active = true
 parameters/playback = SubResource( 47 )
 
-[connection signal="animation_finished" from="AnimatedSprite" to="." method="_on_AnimatedSprite_animation_finished"]
 [connection signal="body_entered" from="Collision" to="." method="_on_Collision_body_entered"]
 [connection signal="body_entered" from="Hurt" to="." method="_on_Hurt_body_entered"]

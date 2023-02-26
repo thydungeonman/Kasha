@@ -1,11 +1,9 @@
-[gd_scene load_steps=21 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
-[ext_resource path="res://scenes/milkshake.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
-[ext_resource path="res://music/stagetheme2.wav" type="AudioStream" id=6]
 [ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=7]
 
 [sub_resource type="ConvexPolygonShape2D" id=3]
@@ -231,16 +229,16 @@ autostart = true
 [node name="Position2D" type="Position2D" parent="."]
 position = Vector2( 336, 23 )
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource( 6 )
-volume_db = -15.0
-autoplay = true
-
 [node name="roundtime" type="Timer" parent="."]
 wait_time = 45.0
 
-[node name="milkshake" parent="." instance=ExtResource( 3 )]
-position = Vector2( 311, 152 )
+[node name="milkshaketimer" type="Timer" parent="."]
+wait_time = 20.0
+autostart = true
+
+[node name="Position2D2" type="Position2D" parent="."]
+position = Vector2( 454, 45 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]
+[connection signal="timeout" from="milkshaketimer" to="." method="_on_milkshaketimer_timeout"]

@@ -16,7 +16,7 @@ _global_script_class_icons={
 
 config/name="Kasha's Pest Control"
 run/main_scene="res://scenes/menu.tscn"
-config/icon="res://icon.png"
+config/icon="res://sprites/kasha/kashaspritesheet4.png"
 
 [autoload]
 

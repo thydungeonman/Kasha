@@ -25,7 +25,9 @@ func _process(delta):
 	
 	timer += delta
 	if(timer > lifetime):
-		get_parent().controllock = false
+		if(!get_parent().rapid_attacking):
+			get_parent().controllock = false
+		get_parent().attack = null
 		queue_free() 
 
 func _physics_process(delta):
@@ -34,7 +36,9 @@ func _physics_process(delta):
 			body.Damage(direction)
 			emit_signal("knockback") 
 			set_physics_process(false) 
-			get_parent().controllock = false
+			if(!get_parent().rapid_attacking):
+				get_parent().controllock = false
+			get_parent().attack = null
 			queue_free()
 	#if we are overlapping with an enemy then damage it and then free ourselves right after
 	#use get_overlapping_bodies() and run through each one in a for loop
