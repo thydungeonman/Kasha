@@ -16,7 +16,6 @@ func _ready():
 	set_process(true)
 
 func _process(delta):
-	
 	lastkill += delta
 	if(lastkill > 1.0):
 		multiplier = 1.0

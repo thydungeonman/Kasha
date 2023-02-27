@@ -21,6 +21,7 @@ config/icon="res://sprites/kasha/kashaspritesheet4.png"
 [autoload]
 
 global="*res://global.gd"
+Sfx="*res://sfx.gd"
 
 [display]
 

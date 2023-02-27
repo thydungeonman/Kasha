@@ -166,7 +166,8 @@ func _physics_process(delta):
 		
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
-			global.Play(preload("res://SFX/kashajump.wav"))
+#			global.Play(preload("res://SFX/kashajump.wav"))
+			global.sfx.PlaySFX("res://SFX/kashajump.wav")
 			velocity.y = JUMP_STRENGTH
 		
 	else: 
@@ -204,9 +205,11 @@ func _on_Hurt_body_entered(body):
 	if body.is_in_group("Enemies") and !body.stunned and !invincible and !powerinvincible:
 		health -= 1
 		if(health <= 0):
-			global.Play(preload("res://SFX/kashadeath.wav"))
+#			global.Play(preload("res://SFX/kashadeath.wav"))
+			global.sfx.PlaySFX("res://SFX/kashadeath.wav")
 		else:
-			global.Play(preload("res://SFX/kashahurt.wav"))
+			global.sfx.PlaySFX("res://SFX/kashahurt.wav")
+#			global.Play(preload("res://SFX/kashahurt.wav"))
 		controllock = true
 		stunned = true
 		#get reverse collision direction

@@ -10,9 +10,15 @@ onready var music = AudioStreamPlayer.new()
 var songs = ["res://music/stage_theme_1_-_pestbustin.ogg", "res://music/stage_theme_2_-_broom_tail_boogie.ogg"]
 var currentsong = null
 
+var sfx
+
 func _ready():
 	add_child(music)
 	music.volume_db = -15
+	sfx = preload("res://sfx.tscn").instance()
+	add_child(sfx)
+	sfx.player1.volume_db = sfxvolume
+	sfx.player2.volume_db = sfxvolume
 
 
 #return vector with vector.x multiplied by x
