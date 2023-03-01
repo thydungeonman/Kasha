@@ -177,7 +177,7 @@ func _physics_process(delta):
 			velocity.y = -150
 			
 	
-	velocity = move_and_slide(velocity, Vector2.UP)
+	velocity = move_and_slide(velocity * 60 * delta * (1/Engine.time_scale), Vector2.UP)
 
 
 func apply_gravity():

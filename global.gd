@@ -31,6 +31,10 @@ func VY(vector,y):
 	vector.y *= y
 	return vector
 
+func CloseEnough(num1,num2,ran = .5):
+	var dif = num1 - num2
+	return(dif <= ran and dif >= 0)
+
 func PlaySong(song):
 	if(song != currentsong):
 		match song:
@@ -57,3 +61,14 @@ func Play(sound,volume = sfxvolume):
 	sfx.volume_db = volume
 	sfx.connect("finished",sfx,"queue_free")
 	sfx.play()
+
+
+func SlowDown(time = .2, scale = .8):
+	Engine.time_scale = scale
+	var t = get_tree().create_timer(time)
+	t.connect("timeout",self,"SpeedUp")
+	pass
+
+func SpeedUp():
+	Engine.time_scale = 1
+	pass

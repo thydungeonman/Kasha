@@ -1,7 +1,8 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=20 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
+[ext_resource path="res://scenes/EnemyCuckoo.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
 [ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=7]
@@ -237,7 +238,13 @@ wait_time = 20.0
 autostart = true
 
 [node name="Position2D2" type="Position2D" parent="."]
-position = Vector2( 454, 45 )
+position = Vector2( 457, 47 )
+
+[node name="Node2D" parent="." instance=ExtResource( 3 )]
+position = Vector2( 278, 148 )
+
+[node name="Position2D3" type="Position2D" parent="."]
+position = Vector2( 470, 135 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]

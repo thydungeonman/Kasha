@@ -12,7 +12,7 @@ func _ready():
 	randomize()
 	var b = randi() % global.LEVELSONGS.size()
 	var a = global.LEVELSONGS.values()[b]
-	global.PlaySong(a)
+#	global.PlaySong(a)
 	set_process(true)
 
 func _process(delta):

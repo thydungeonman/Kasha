@@ -14,8 +14,14 @@ var timer = 0.0 # the variable that will count the time for us
 var direction = 1
 #alternatively we could attach a timer node to this scene instead
 
+var count = 0
+
+export var slowdownscale = .8
+export var slowdowntme = .2
 
 func _ready():
+	hide()
+	monitoring = false
 	set_process(true)
 	set_physics_process(true)
 
@@ -31,8 +37,13 @@ func _process(delta):
 		queue_free() 
 
 func _physics_process(delta):
+	count += 1
+	if(count == 5):
+		monitoring = true
+		show()
 	for body in get_overlapping_bodies():
 		if body.is_in_group("Enemies"):
+			global.SlowDown(slowdowntme,slowdownscale)
 			body.Damage(direction)
 			emit_signal("knockback") 
 			set_physics_process(false) 

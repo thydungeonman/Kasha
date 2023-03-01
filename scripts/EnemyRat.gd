@@ -35,7 +35,7 @@ func _ready():
 		Flip()
 	timer.set_wait_time(stuntime)
  
-func _physics_process(_delta):
+func _physics_process(delta):
 	velocity.y += GRAVITY
  
 	if is_on_wall() and !stunned: #hit wall go the other way
@@ -50,14 +50,14 @@ func _physics_process(_delta):
 		
 	else: #we're stunned
 		#we are going to want to reduce horizontal velocity each frame
+		
 		if(!dead):
 			velocity.x -= velocity.x/knockback_deceleration_stunned
 		else:
 			velocity.x -= velocity.x/knockback_deceleration_killed
-		move_and_slide(global.VX(velocity,knockbackdirection), Vector2.UP)
+		move_and_slide(global.VX(velocity,knockbackdirection) * 60 * delta * (1/Engine.time_scale), Vector2.UP)
  
-	
- 
+
 func TrueVelocity():
 	var v = velocity
 	v.x *= direction
