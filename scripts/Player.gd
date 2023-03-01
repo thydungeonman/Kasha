@@ -197,10 +197,6 @@ func apply_acceleration(movedirection):
 	pass
 
 
-func _on_Collision_body_entered(body):
-	pass # Replace with function body.
-
-
 func _on_Hurt_body_entered(body):
 	if body.is_in_group("Enemies") and !body.stunned and !invincible and !powerinvincible:
 		health -= 1

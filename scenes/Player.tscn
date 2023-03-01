@@ -4,10 +4,10 @@
 [ext_resource path="res://scripts/Player.gd" type="Script" id=6]
 
 [sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 3, 7.5 )
+extents = Vector2( 3, 7 )
 
 [sub_resource type="RectangleShape2D" id=11]
-extents = Vector2( 4, 7 )
+extents = Vector2( 4, 7.6 )
 
 [sub_resource type="AnimationNodeAnimation" id=49]
 animation = "attack rapid"
@@ -537,19 +537,13 @@ texture = ExtResource( 1 )
 hframes = 13
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
-position = Vector2( 0, 2.5 )
-shape = SubResource( 10 )
-
-[node name="Collision" type="Area2D" parent="."]
-
-[node name="CollisionBox2" type="CollisionShape2D" parent="Collision"]
-position = Vector2( 0, 2.5 )
+position = Vector2( 0, 4 )
 shape = SubResource( 10 )
 
 [node name="Hurt" type="Area2D" parent="."]
 
 [node name="Hurtbox" type="CollisionShape2D" parent="Hurt"]
-position = Vector2( 0, 4 )
+position = Vector2( 0, 3.5 )
 shape = SubResource( 11 )
 
 [node name="AnimationTree" type="AnimationTree" parent="."]
@@ -587,5 +581,4 @@ anim_player = NodePath("../AnimationPlayer2")
 active = true
 parameters/playback = SubResource( 47 )
 
-[connection signal="body_entered" from="Collision" to="." method="_on_Collision_body_entered"]
 [connection signal="body_entered" from="Hurt" to="." method="_on_Hurt_body_entered"]

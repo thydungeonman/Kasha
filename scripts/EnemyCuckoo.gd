@@ -1,14 +1,16 @@
 extends KinematicBody2D
 
+#potential bug if bird is hit while flying down to the level it wants to go
+#maybe just pick a new level to go to after getting up from being stunned
+
 signal died
 
-var flyfreq = 1
 export var freq = 18
 export var amplitude = 100
 
 var time = 0.0
 var direction = -1
-var horizontalspeed = 30
+export var horizontalspeed = 30
 
 var hitstun = 0
 var health = 1
@@ -22,8 +24,9 @@ export var knockback_deceleration_stunned = 20
 export var knockback_deceleration_killed = 100
 
 var knockbackdirection = 0
-var stuntime = 3.0
+export var stuntime = 3.0
 export(int) var GRAVITY = 10
+export(int) var LANDINGGRAVITY = 3.33
 
 #takes off diagonally
 #can land anywhere on a lane
@@ -32,6 +35,8 @@ export(int) var GRAVITY = 10
 #gets stunned just like the rat
 
 #flight levels   y = 40, 75, 120, 140
+#maybe just go 25 above landing point
+var heights = [40,75,115,140]
 
 var currentheight = 40
 export var landing = false
@@ -51,13 +56,12 @@ func _physics_process(delta):
 		Fly(delta)
 	elif(landing):
 		get_node("AnimationPlayer").play("landing")
-		velocity.y += GRAVITY
+		velocity.y += LANDINGGRAVITY
 		move_and_slide(velocity,Vector2.UP)
 		if(is_on_floor()):
 			get_node("AnimationPlayer").play("standing")
 			velocity.y = 0
-		
-		
+			currentheight = position.y -10
 	else:
 		#just bump her like the rat and apply gravity
 		velocity.y += GRAVITY
@@ -72,6 +76,8 @@ func _physics_process(delta):
 
 func Flip():
 	direction *= -1
+	if(knockbackdirection != null):
+		knockbackdirection *= -1
 	$Sprite.flip_h = !$Sprite.flip_h
 
 
@@ -81,11 +87,23 @@ func Fly(delta):
 	var velocity = Vector2(horizontalspeed * direction,y)
 #	print(y)
 	move_and_slide(velocity)
+	
+	for i in range(get_slide_count()):
+		var slide = get_slide_collision(i)
+		if(slide.collider.is_in_group("Players")):
+			LandOnFloor()
+			currentheight = position.y
+	
+	
+	
 	if(global.CloseEnough(position.y,currentheight,5)):
+		LandOnFloor()
 		freq = 18
 
 func Damage(direction):
 	if(!stunned): #if we aren't stunned when we are hit
+		LandOnFloor()
+		landing = false
 		flighttimer.paused = true
 		global.sfx.PlaySFX("res://SFX/enemyhurt.wav")
 		stunned = true
@@ -95,6 +113,7 @@ func Damage(direction):
 		get_node("AnimationPlayer").play("standing")
 		timer.start()
 	else: #if we are already stunned when we are hit
+		LandOnFloor()
 		velocity = knockback_velocity_stunned  #just bump him again
 		timer.wait_time = 3.0
 		timer.start()
@@ -107,6 +126,7 @@ func _on_Timer_timeout():
 	freq = 1
 	time = 3.14
 	flighttimer.paused = false
+	LandOnFloor()
 
 
 func _on_stunbox_body_entered(body):
@@ -128,6 +148,7 @@ func TurnOffCollision():
 
 onready var groundcast = get_node("RayCast2D")
 func GroundBelow():
+	return true
 	return(groundcast.is_colliding())
 
 
@@ -135,15 +156,33 @@ func GroundBelow():
 func _on_flighttimer_timeout():
 	if(landing == true):
 		#taking off
+		currentheight = heights[randi() % heights.size()]
 		freq = 1
-		time = 3.14
+		if(position.y < currentheight): # we have to go down
+			time = PI/2
+			GoThroughFloor()
+		else:
+			time = PI
 		landing = false
 		get_node("AnimationPlayer").play("flying")
+		flighttimer.wait_time = 10.0 + (randf() * 2)
 	else:
-		if(GroundBelow()):
-			landing = true
-			flighttimer.wait_time = 3.0
-			flighttimer.start()
-			
+		landing = true
+		flighttimer.wait_time = 5.0 + (randf() * 2)
+		flighttimer.start()
+		var t = get_tree().create_timer(flighttimer.wait_time/2)
+		t.connect("timeout",self,"MaybeFlip")
+		LandOnFloor()
 	
 	pass # Replace with function body.
+
+func GoThroughFloor():
+	set_collision_mask_bit(0,false)
+	pass
+func LandOnFloor():
+	set_collision_mask_bit(0,true)
+
+func MaybeFlip():
+	if(randi() % 2 == 0):
+		Flip()
+

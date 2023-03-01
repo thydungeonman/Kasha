@@ -22,12 +22,20 @@ func _process(delta):
 
 func _on_Timer_timeout():
 	if(numrats > 0):
-		var rat = load("res://scenes/EnemyRat.tscn").instance()
-		add_child(rat)
-		rat.translate(Vector2(330 + randi() % 100,20))
-		if(randi() % 2 == 1):
-			rat.Flip()
-		rat.connect("died",self,"AnotherOneGone")
+		if(randi()% 4 == 0): #1 in 4 chance of spawning a bird
+			var bird = load("res://scenes/EnemyCuckoo.tscn").instance()
+			add_child(bird)
+			bird.translate(Vector2((randi() % 300) + 20,40))
+			if(randi() % 2 == 1):
+				bird.Flip()
+			bird.connect("died",self,"AnotherOneGone")
+		else:
+			var rat = load("res://scenes/EnemyRat.tscn").instance()
+			add_child(rat)
+			rat.translate(Vector2(330 + randi() % 100,20))
+			if(randi() % 2 == 1):
+				rat.Flip()
+			rat.connect("died",self,"AnotherOneGone")
 		numrats -= 1
 
 func AnotherOneGone():

@@ -1,8 +1,7 @@
-[gd_scene load_steps=20 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://tilesheets/s4m_ur4i_8x8_minimal-future.png" type="Texture" id=2]
-[ext_resource path="res://scenes/EnemyCuckoo.tscn" type="PackedScene" id=3]
 [ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
 [ext_resource path="res://scenes/UI.tscn" type="PackedScene" id=7]
@@ -79,7 +78,7 @@ points = PoolVector2Array( 0, 0, 8, 0, 8, 8, 0, 8 )
 extents = Vector2( 240, 2.5 )
 
 [sub_resource type="RectangleShape2D" id=12]
-extents = Vector2( 4, 80 )
+extents = Vector2( 4, 119.5 )
 
 [sub_resource type="RectangleShape2D" id=6]
 extents = Vector2( 32, 1 )
@@ -144,16 +143,20 @@ shape = SubResource( 5 )
 
 [node name="wall left" type="StaticBody2D" parent="."]
 position = Vector2( 123, 97 )
+collision_layer = 8388609
+collision_mask = 8388609
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall left"]
-position = Vector2( -126, 30 )
+position = Vector2( -126, 5 )
 shape = SubResource( 12 )
 
 [node name="wall right" type="StaticBody2D" parent="."]
 position = Vector2( 608, 97 )
+collision_layer = 8388609
+collision_mask = 8388609
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="wall right"]
-position = Vector2( -126, 30 )
+position = Vector2( -126, 15.5 )
 shape = SubResource( 12 )
 
 [node name="bottomlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
@@ -240,11 +243,8 @@ autostart = true
 [node name="Position2D2" type="Position2D" parent="."]
 position = Vector2( 457, 47 )
 
-[node name="Node2D" parent="." instance=ExtResource( 3 )]
-position = Vector2( 278, 148 )
-
 [node name="Position2D3" type="Position2D" parent="."]
-position = Vector2( 470, 135 )
+position = Vector2( 149, 77 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]
