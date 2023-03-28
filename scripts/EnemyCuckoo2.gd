@@ -1,30 +1,5 @@
-extends KinematicBody2D
+extends "res://scripts/EnemyBase.gd"
 
-#potential bug if bird is hit while flying down to the level it wants to go
-#maybe just pick a new level to go to after getting up from being stunned
-
-signal died
-
-
-
-var time = 0.0
-var direction = -1
-export var horizontalspeed = 30
-
-var hitstun = 0
-var health = 1
-var stunned = false
-var dead = false
-
-export var knockback_velocity_stunned = Vector2(100,-150)
-export var knockback_velocity_killed = Vector2(150,-200)
-
-export var knockback_deceleration_stunned = 20
-export var knockback_deceleration_killed = 100
-
-var knockbackdirection = 0
-export var stuntime = 3.0
-export(int) var GRAVITY = 10
 export(int) var LANDINGGRAVITY = 3.33
 
 #takes off diagonally
@@ -35,13 +10,15 @@ export(int) var LANDINGGRAVITY = 3.33
 
 #flight levels   y = 40, 75, 120, 140
 #maybe just go 25 above landing point
+var time = 0.0
 export var freq = 18
 export var amplitude = 100
 var heights = [40,75,115,140]
+export var horizontalspeed = 30
 
 var currentheight = 40
 export var landing = false
-var velocity = Vector2()
+
 onready var timer = get_node("Timer")
 onready var flighttimer = get_node("flighttimer")
 
@@ -49,7 +26,6 @@ func _ready():
 	$AnimationPlayer.play("flying")
 	set_physics_process(true)
 	pass # Replace with function body.
-
 
 func _physics_process(delta):
 	
@@ -81,7 +57,6 @@ func Flip():
 		knockbackdirection *= -1
 	$Sprite.flip_h = !$Sprite.flip_h
 
-
 func Fly(delta):
 	time += delta * freq
 	var y = sin(time) * amplitude
@@ -94,7 +69,7 @@ func Fly(delta):
 		if(slide.collider.is_in_group("Players")):
 			LandOnFloor()
 			currentheight = position.y
-	
+		
 	
 	
 	if(global.CloseEnough(position.y,currentheight,5)):
@@ -118,7 +93,10 @@ func Damage(direction):
 		velocity = knockback_velocity_stunned  #just bump him again
 		timer.wait_time = 3.0
 		timer.start()
- 
+
+
+
+
 func _on_Timer_timeout():
 	stunned = false
 	$Sprite.flip_v = false
@@ -130,7 +108,7 @@ func _on_Timer_timeout():
 	LandOnFloor()
 
 
-func _on_stunbox_body_entered(body):
+func _on_StunHurtBox_body_entered(body):
 	if stunned and body.is_in_group("Players"):
 		flighttimer.paused = true
 		global.sfx.PlaySFX("res://SFX/enemydeath.wav")
@@ -142,17 +120,15 @@ func _on_stunbox_body_entered(body):
 		
 		TurnOffCollision()
 		emit_signal("died")
-	pass # Replace with function body.
+
 func TurnOffCollision():
 	get_node("CollisionShape2D").set_deferred("disabled", true)
-	get_node("stunbox/CollisionShape2D").set_deferred("disabled",true)
+	get_node("StunHurtBox/CollisionShape2D").set_deferred("disabled",true)
 
 onready var groundcast = get_node("RayCast2D")
 func GroundBelow():
 	return true
 	return(groundcast.is_colliding())
-
-
 
 func _on_flighttimer_timeout():
 	if(landing == true):
@@ -174,8 +150,8 @@ func _on_flighttimer_timeout():
 		var t = get_tree().create_timer(flighttimer.wait_time/2)
 		t.connect("timeout",self,"MaybeFlip")
 		LandOnFloor()
-	
-	pass # Replace with function body.
+
+
 
 func GoThroughFloor():
 	set_collision_mask_bit(0,false)
@@ -186,4 +162,3 @@ func LandOnFloor():
 func MaybeFlip():
 	if(randi() % 2 == 0):
 		Flip()
-

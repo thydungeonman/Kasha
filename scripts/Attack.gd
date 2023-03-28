@@ -21,7 +21,7 @@ export var slowdowntme = .2
 
 func _ready():
 	hide()
-	monitoring = false
+#	monitoring = false
 	set_process(true)
 	set_physics_process(true)
 
@@ -43,7 +43,7 @@ func _physics_process(delta):
 		show()
 	for body in get_overlapping_bodies():
 		if body.is_in_group("Enemies"):
-			global.SlowDown(slowdowntme,slowdownscale)
+#			global.SlowDown(slowdowntme,slowdownscale)
 			body.Damage(direction)
 			emit_signal("knockback") 
 			set_physics_process(false) 

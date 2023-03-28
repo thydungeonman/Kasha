@@ -45,7 +45,7 @@ var dontstop = false
 func _ready():
 	root.start("idle")
 	flashroot.start("RESET")
-	pass # Replace with function body.
+	
 
 
 func GoThroughFloor():
@@ -222,9 +222,6 @@ func _on_Hurt_body_entered(body):
 	elif(body.is_in_group("powerup")):
 		PowerUpInvincible()
 		body.queue_free()
-
-
-
 
 
 func Slide():

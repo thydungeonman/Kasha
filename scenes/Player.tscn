@@ -529,7 +529,7 @@ transitions = [ "RESET", "flash", SubResource( 44 ), "flash", "RESET", SubResour
 
 [node name="Player" type="KinematicBody2D" groups=["Players"]]
 collision_layer = 2
-collision_mask = 13
+collision_mask = 9
 script = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
