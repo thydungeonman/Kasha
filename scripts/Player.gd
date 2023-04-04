@@ -106,11 +106,18 @@ func Attacks(delta):
 			
 
 func SpawnAttack():
-	attack = preload("res://scenes/Attack.tscn").instance()
-	controllock = true
-	add_child(attack)
-	attack.translate(Vector2(15 * facing,0))
-	attack.direction = facing
+	if(is_on_floor()):
+		attack = preload("res://scenes/Attack.tscn").instance()
+		controllock = true
+		add_child(attack)
+		attack.translate(Vector2(15 * facing,0))
+		attack.direction = facing
+	else:
+		attack = preload("res://scenes/Attack spin.tscn").instance()
+		controllock = true
+		add_child(attack)
+		attack.translate(Vector2(0,0))
+		attack.direction = facing
 
 
 func StopAttacking(tim):
@@ -241,9 +248,12 @@ func Anims():
 		root.travel("jump")
 	
 	if(attacking):
-		root.travel("attack")
-		if(rapidattacking):
-			root.travel("attack rapid")
+		if(is_on_floor()):
+			root.travel("attack")
+			if(rapidattacking):
+				root.travel("attack rapid")
+		else:
+			root.travel("air spin")
 
 
 var playbackpos = 0.0

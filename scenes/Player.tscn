@@ -1,4 +1,4 @@
-[gd_scene load_steps=46 format=2]
+[gd_scene load_steps=50 format=2]
 
 [ext_resource path="res://sprites/kashaspritesheet-full.png" type="Texture" id=1]
 [ext_resource path="res://scripts/Player.gd" type="Script" id=6]
@@ -8,6 +8,9 @@ extents = Vector2( 3, 7 )
 
 [sub_resource type="RectangleShape2D" id=11]
 extents = Vector2( 4, 7.6 )
+
+[sub_resource type="AnimationNodeAnimation" id=62]
+animation = "air spin"
 
 [sub_resource type="AnimationNodeAnimation" id=49]
 animation = "attack rapid"
@@ -67,23 +70,29 @@ auto_advance = true
 switch_mode = 2
 auto_advance = true
 
+[sub_resource type="AnimationNodeStateMachineTransition" id=63]
+
+[sub_resource type="AnimationNodeStateMachineTransition" id=64]
+
 [sub_resource type="AnimationNodeStateMachine" id=18]
+"states/air spin/node" = SubResource( 62 )
+"states/air spin/position" = Vector2( 746, -87 )
 states/attack/node = SubResource( 26 )
-states/attack/position = Vector2( 930, 19 )
+states/attack/position = Vector2( 929, -87 )
 "states/attack rapid/node" = SubResource( 49 )
 "states/attack rapid/position" = Vector2( 1168, 19 )
 "states/attack rapid2/node" = SubResource( 52 )
 "states/attack rapid2/position" = Vector2( 1437, 19 )
 "states/attack recoil/node" = SubResource( 58 )
-"states/attack recoil/position" = Vector2( 1159, -93 )
+"states/attack recoil/position" = Vector2( 1161, -87 )
 states/idle/node = SubResource( 27 )
-states/idle/position = Vector2( 746, 277 )
+states/idle/position = Vector2( 706, 277 )
 states/jump/node = SubResource( 28 )
-states/jump/position = Vector2( 650, 72 )
+states/jump/position = Vector2( 593, 96 )
 states/walk/node = SubResource( 29 )
-states/walk/position = Vector2( 1147, 261 )
-transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ), "attack", "attack rapid", SubResource( 50 ), "attack rapid", "idle", SubResource( 51 ), "attack rapid", "attack rapid2", SubResource( 53 ), "attack rapid2", "attack rapid", SubResource( 54 ), "attack rapid2", "idle", SubResource( 55 ), "attack", "attack recoil", SubResource( 59 ), "attack recoil", "idle", SubResource( 60 ) ]
-graph_offset = Vector2( 259, -169 )
+states/walk/position = Vector2( 1141, 277 )
+transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ), "attack", "attack rapid", SubResource( 50 ), "attack rapid", "idle", SubResource( 51 ), "attack rapid", "attack rapid2", SubResource( 53 ), "attack rapid2", "attack rapid", SubResource( 54 ), "attack rapid2", "idle", SubResource( 55 ), "attack", "attack recoil", SubResource( 59 ), "attack recoil", "idle", SubResource( 60 ), "jump", "air spin", SubResource( 63 ), "air spin", "idle", SubResource( 64 ) ]
+graph_offset = Vector2( 55, -166 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
 
@@ -123,7 +132,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 0,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("Sprite:vframes")
@@ -148,6 +157,36 @@ tracks/4/keys = {
 "transitions": PoolRealArray( 1 ),
 "update": 0,
 "values": [ 0 ]
+}
+
+[sub_resource type="Animation" id=61]
+resource_name = "air spin"
+length = 0.2
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:hframes")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 41 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.05, 0.1, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 19, 20, 21, 22 ]
 }
 
 [sub_resource type="Animation" id=21]
@@ -176,7 +215,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:vframes")
@@ -200,7 +239,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.083, 0.166, 0.249 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 6, 7, 8, 9 ]
+"values": [ 12, 13, 14, 15 ]
 }
 
 [sub_resource type="Animation" id=48]
@@ -229,7 +268,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:vframes")
@@ -253,7 +292,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.083, 0.166 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ 10, 11, 12 ]
+"values": [ 16, 17, 18 ]
 }
 
 [sub_resource type="Animation" id=56]
@@ -282,7 +321,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:vframes")
@@ -306,7 +345,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0, 0.083, 0.166, 0.249 ),
 "transitions": PoolRealArray( 1, 1, 1, 1 ),
 "update": 1,
-"values": [ 6, 7, 8, 9 ]
+"values": [ 12, 13, 14, 15 ]
 }
 
 [sub_resource type="Animation" id=57]
@@ -322,7 +361,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 6 ]
+"values": [ 12 ]
 }
 
 [sub_resource type="Animation" id=39]
@@ -368,7 +407,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:vframes")
@@ -421,7 +460,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/2/type = "value"
 tracks/2/path = NodePath("Sprite:vframes")
@@ -445,7 +484,7 @@ tracks/3/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 5 ]
+"values": [ 11 ]
 }
 
 [sub_resource type="Animation" id=25]
@@ -462,7 +501,7 @@ tracks/0/keys = {
 "times": PoolRealArray( 0 ),
 "transitions": PoolRealArray( 1 ),
 "update": 1,
-"values": [ 13 ]
+"values": [ 41 ]
 }
 tracks/1/type = "value"
 tracks/1/path = NodePath("Sprite:vframes")
@@ -486,7 +525,7 @@ tracks/2/keys = {
 "times": PoolRealArray( 0, 0.1 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ 1, 2 ]
+"values": [ 3, 4 ]
 }
 tracks/3/type = "value"
 tracks/3/path = NodePath("Sprite:texture")
@@ -561,7 +600,7 @@ script = ExtResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-hframes = 13
+hframes = 41
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 position = Vector2( 0, 4 )
@@ -581,6 +620,7 @@ parameters/playback = SubResource( 19 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 anims/RESET = SubResource( 38 )
+"anims/air spin" = SubResource( 61 )
 anims/attack = SubResource( 21 )
 "anims/attack rapid" = SubResource( 48 )
 "anims/attack rapid2" = SubResource( 56 )

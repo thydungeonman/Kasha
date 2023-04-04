@@ -109,3 +109,5 @@ func Die(animname):
 	queue_free()
 	pass
 
+func Break():
+	$AudioStreamPlayer2.play()

@@ -4,9 +4,11 @@ extends "res://scripts/EnemyBase.gd"
 onready var sprite = $Sprite
 onready var timer = $Timer
 
+onready var root = get_node("AnimationTree").get("parameters/playback")
 
 func _ready():
 	# Set this on the node directly
+	root.start("idle")
 	set_physics_process(true)
 	if(randi() % 2 == 1):
 		Flip()
@@ -95,9 +97,12 @@ func Animate():
 #	else:
 #	idle
 	if(!stunned and velocity.x != 0):
-		$AnimationPlayer.play("walk")
+		print("walking")
+		root.travel("walk")
+#		$AnimationPlayer.play("walk")
 	else:
-		$AnimationPlayer.play("idle")
+		root.travel("idle")
+#		$AnimationPlayer.play("idle")
 
 
 	
