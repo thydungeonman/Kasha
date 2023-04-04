@@ -63,12 +63,12 @@ func Play(sound,volume = sfxvolume):
 	sfx.play()
 
 
-#func SlowDown(time = .2, scale = .8):
-#	Engine.time_scale = scale
-#	var t = get_tree().create_timer(time)
-#	t.connect("timeout",self,"SpeedUp")
-#	pass
-#
-#func SpeedUp():
-#	Engine.time_scale = 1
-#	pass
+func SlowDown(time = .2, scale = .8):
+	Engine.time_scale = scale
+	var t = get_tree().create_timer(time)
+	t.connect("timeout",self,"SpeedUp")
+	pass
+
+func SpeedUp():
+	Engine.time_scale = 1
+	pass

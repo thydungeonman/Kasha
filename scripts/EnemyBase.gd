@@ -37,3 +37,8 @@ func Flip():
 
 func Damage(dir):
 	pass
+
+func TrueVelocity():
+	var v = velocity
+	v.x *= direction
+	return v

@@ -37,10 +37,6 @@ func _physics_process(delta):
 	pass
 	Animate()
 
-func TrueVelocity():
-	var v = velocity
-	v.x *= direction
-	return v
 
 
 #called by the attack scene when it overlaps with an enemy body

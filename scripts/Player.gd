@@ -43,6 +43,9 @@ var dontstop = false
 
 
 func _ready():
+	
+#	Engine.time_scale = 2
+	
 	root.start("idle")
 	flashroot.start("RESET")
 	
@@ -142,13 +145,14 @@ func StopInvincible():
 
 func _physics_process(delta):
 	apply_gravity()
-	
+	HorizontalForces()
 	if(stunned and velocity.x == 0):
 		stunned = false
 		controllock = false
 		t = get_tree().create_timer(invincibletime)
 		t.connect("timeout",self,"StopInvincible",[],CONNECT_ONESHOT)
 	
+	EggCheck()
 	
 	if direction == 0:
 #		if !is_attacking:
@@ -162,7 +166,8 @@ func _physics_process(delta):
 			$Sprite.flip_h = false
 		elif direction < 0:
 			$Sprite.flip_h = true
-	
+		
+		
 		
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
@@ -171,8 +176,6 @@ func _physics_process(delta):
 			velocity.y = JUMP_STRENGTH
 		
 	else: 
-#		if !is_attacking:
-#			animatedSprite.animation = "Jump"
 		if Input.is_action_just_released("ui_accept") and velocity.y < -150:
 			velocity.y = -150
 			
@@ -198,7 +201,7 @@ func apply_acceleration(movedirection):
 
 
 func _on_Hurt_body_entered(body):
-	if body.is_in_group("Enemies") and !body.stunned and !invincible and !powerinvincible:
+	if body.is_in_group("Enemies") and !body.is_in_group("Egg") and !body.stunned and !invincible and !powerinvincible:
 		health -= 1
 		if(health <= 0):
 #			global.Play(preload("res://SFX/kashadeath.wav"))
@@ -273,3 +276,29 @@ func PowerUpInvincibleDone():
 	print(str(playbackpos))
 
 	
+
+func EggCheck():
+	for s in range(get_slide_count()):
+		var slide = get_slide_collision(s)
+		if(slide.collider != null):
+			if(slide.collider.is_in_group("Egg")):
+				if(is_on_wall()):
+					slide.collider.Push(direction)
+
+
+
+var Hforces = [] #vector3s
+#force, reduction per frame, direction
+func HorizontalForces():
+	for v in Hforces:
+		velocity.x += v.x * v.z
+	var bads = []
+	for v in range(Hforces.size()-1,-1,-1):
+		Hforces[v].x -= Hforces[v].y
+		if(Hforces[v].x < 0):
+			bads.push_back(v)
+	for b in bads:
+		Hforces.remove(b)
+		pass
+	
+	pass
