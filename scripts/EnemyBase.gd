@@ -42,3 +42,10 @@ func TrueVelocity():
 	var v = velocity
 	v.x *= direction
 	return v
+
+func Die():
+#	set_physics_process(false)
+	get_tree().create_timer(2.0,true).connect("timeout",self,"ActuallyDie")
+
+func ActuallyDie():
+	call_deferred("queue_free")

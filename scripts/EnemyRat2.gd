@@ -86,6 +86,7 @@ func _on_StunHurtBox_body_entered(body):
 		
 		TurnOffCollision()
 		emit_signal("died")
+		Die()
 	pass # Replace with function body.
 
 
@@ -97,7 +98,7 @@ func Animate():
 #	else:
 #	idle
 	if(!stunned and velocity.x != 0):
-		print("walking")
+#		print("walking")
 		root.travel("walk")
 #		$AnimationPlayer.play("walk")
 	else:

@@ -103,7 +103,7 @@ func _on_rolltimer_timeout():
 	
 	pass # Replace with function body.
 
-func Die(animname):
+func Die():
 	print("WHAT")
 	emit_signal("died")
 	queue_free()

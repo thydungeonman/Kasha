@@ -16,5 +16,12 @@ margin_right = 57.0
 margin_bottom = 50.0
 text = "mode2"
 
+[node name="test" type="Button" parent="."]
+margin_top = 78.0
+margin_right = 57.0
+margin_bottom = 98.0
+text = "test"
+
 [connection signal="pressed" from="mode1" to="." method="_on_mode1_pressed"]
 [connection signal="pressed" from="mode2" to="." method="_on_mode2_pressed"]
+[connection signal="pressed" from="test" to="." method="_on_test_pressed"]

@@ -24,3 +24,8 @@ func _on_mode1_pressed():
 func _on_mode2_pressed():
 	get_tree().change_scene("res://scenes/world2.tscn")
 	pass # Replace with function body.
+
+
+func _on_test_pressed():
+	get_tree().change_scene("res://scenes/test.tscn")
+	pass # Replace with function body.

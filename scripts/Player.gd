@@ -114,7 +114,7 @@ func SpawnAttack():
 		attack.direction = facing
 	else:
 		attack = preload("res://scenes/Attack spin.tscn").instance()
-		controllock = true
+#		controllock = true
 		add_child(attack)
 		attack.translate(Vector2(0,0))
 		attack.direction = facing
@@ -162,23 +162,16 @@ func _physics_process(delta):
 	EggCheck()
 	
 	if direction == 0:
-#		if !is_attacking:
-#			animatedSprite.animation = "Idle"
 		apply_friction();
 	else:
 		apply_acceleration(direction);
-#		if !is_attacking:
-#			animatedSprite.animation = "Walk"
 		if direction > 0:
 			$Sprite.flip_h = false
 		elif direction < 0:
 			$Sprite.flip_h = true
 		
-		
-		
 	if is_on_floor():
 		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
-#			global.Play(preload("res://SFX/kashajump.wav"))
 			global.sfx.PlaySFX("res://SFX/kashajump.wav")
 			velocity.y = JUMP_STRENGTH
 		
@@ -291,6 +284,7 @@ func EggCheck():
 	for s in range(get_slide_count()):
 		var slide = get_slide_collision(s)
 		if(slide.collider != null):
+#			print(slide.collider.name)
 			if(slide.collider.is_in_group("Egg")):
 				if(is_on_wall()):
 					slide.collider.Push(direction)

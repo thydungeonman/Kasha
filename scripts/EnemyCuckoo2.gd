@@ -120,6 +120,7 @@ func _on_StunHurtBox_body_entered(body):
 		
 		TurnOffCollision()
 		emit_signal("died")
+		Die()
 
 func TurnOffCollision():
 	get_node("CollisionShape2D").set_deferred("disabled", true)
