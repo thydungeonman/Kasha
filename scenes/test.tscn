@@ -3,9 +3,6 @@
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Camera.tscn" type="PackedScene" id=3]
 
-[sub_resource type="RectangleShape2D" id=1]
-extents = Vector2( 290.312, 4 )
-
 [sub_resource type="RectangleShape2D" id=4]
 extents = Vector2( 320, 4 )
 
@@ -15,14 +12,13 @@ extents = Vector2( 7, 121.5 )
 [sub_resource type="RectangleShape2D" id=3]
 extents = Vector2( 7.5, 107.75 )
 
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 290.312, 1 )
+
 [node name="Node2D" type="Node2D"]
 position = Vector2( 143, 97 )
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-position = Vector2( 178.688, 25 )
-shape = SubResource( 1 )
 
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2( 177, 79 )
@@ -41,3 +37,10 @@ position = Vector2( -87, -31 )
 
 [node name="Camera2D" parent="Player" instance=ExtResource( 3 )]
 limit_right = 644
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="." groups=["notfloor"]]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2( 178.688, 37 )
+shape = SubResource( 1 )
+one_way_collision = true
