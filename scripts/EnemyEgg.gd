@@ -1,12 +1,13 @@
 extends "res://scripts/EnemyBase.gd"
 
-export var timetohatch = 10.0
+export var timetohatch = 3.0
 export var pushspeed = 30
 export var slowdown = 10
 export var rollgranularity = 10
 
 var flipped = false
 var fellfromheight = false
+var hatching = false #goes to true when hatching animation starts
 
 # 0 1 2 3 4 f3 f2 f1 ->
 onready var anim = get_node("AnimationPlayer")
@@ -14,12 +15,13 @@ onready var anim = get_node("AnimationPlayer")
 var rollbuffer = 0
 
 func _ready():
-	
+	$eggtimer.wait_time = timetohatch
+	$eggtimer.start()
 	
 	pass # Replace with function body.
 
 func _physics_process(delta):
-	print(delta)
+#	print(delta)
 	velocity.y += GRAVITY
 #	print(velocity.y)
 	if(velocity.y > 200):
@@ -103,6 +105,7 @@ func _on_rolltimer_timeout():
 	
 	pass # Replace with function body.
 
+#thisi s a descriptiong
 func Die():
 	print("WHAT")
 	emit_signal("died")
@@ -111,3 +114,30 @@ func Die():
 
 func Break():
 	$AudioStreamPlayer2.play()
+
+#put down a bird where the egg was,  probably have its flight level be just above where the egg was
+func SpawnBird():
+	var bird = load("res://scenes/EnemyCuckoo2.tscn").instance()
+	get_parent().add_child(bird)
+	var p = global_position
+	
+	bird.global_position = p
+	
+	if(randi() % 2 == 1):
+		bird.Flip()
+	bird._on_flighttimer_timeout()
+	bird.flighttimer.stop()
+	bird.flighttimer.wait_time = 1
+	bird.flighttimer.start()
+	bird.connect("died",self,"AnotherOneGone")
+
+
+func BecomeEthereal():
+	set_collision_layer_bit(2,false)
+	set_collision_layer_bit(0,false)
+	pass
+
+
+func _on_eggtimer_timeout():
+	$AnimationPlayer.play("hatch")
+	pass # Replace with function body.

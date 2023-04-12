@@ -43,9 +43,19 @@ func TrueVelocity():
 	v.x *= direction
 	return v
 
+##this is the base die function
 func Die():
 #	set_physics_process(false)
+	
 	get_tree().create_timer(2.0,true).connect("timeout",self,"ActuallyDie")
 
 func ActuallyDie():
+	emit_signal("died")
 	call_deferred("queue_free")
+
+
+#went to far down   may also add left/right/up later
+func OutOfBoundsCheck():
+	if(global_position.y >= 185):
+		emit_signal("died")
+		queue_free()

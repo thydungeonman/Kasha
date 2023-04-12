@@ -12,8 +12,9 @@ export(int) var LANDINGGRAVITY = 3.33
 #maybe just go 25 above landing point
 var time = 0.0
 export var freq = 18
+var freqtemp 
 export var amplitude = 100
-var heights = [40,75,115,140]
+var heights = [40,75,115,147]
 export var horizontalspeed = 30
 
 var currentheight = 40
@@ -23,11 +24,24 @@ onready var timer = get_node("Timer")
 onready var flighttimer = get_node("flighttimer")
 
 func _ready():
+	freqtemp = freq
 	$AnimationPlayer.play("flying")
 	set_physics_process(true)
 	pass # Replace with function body.
 
 func _physics_process(delta):
+	OutOfBoundsCheck()
+	
+	if(layingegg):
+		var egg = load("res://scenes/EnemyEgg.tscn").instance()
+		get_parent().add_child(egg)
+		move_and_collide(Vector2(0,-30))
+		egg.position = position + Vector2(0,20) 
+		layingegg = false
+	
+	
+	if(landing and is_on_floor()):
+		MaybeFlip()
 	
 	if(!stunned and !landing):
 		Fly(delta)
@@ -74,7 +88,7 @@ func Fly(delta):
 	
 	if(global.CloseEnough(position.y,currentheight,5)):
 		LandOnFloor()
-		freq = 18
+		freq = freqtemp
 
 func Damage(direction):
 	if(!stunned): #if we aren't stunned when we are hit
@@ -143,13 +157,16 @@ func _on_flighttimer_timeout():
 			time = PI
 		landing = false
 		get_node("AnimationPlayer").play("flying")
+		flighttimer.stop()
 		flighttimer.wait_time = 10.0 + (randf() * 2)
+		flighttimer.start()
 	else:
 		landing = true
 		flighttimer.wait_time = 5.0 + (randf() * 2)
 		flighttimer.start()
-		var t = get_tree().create_timer(flighttimer.wait_time/2)
-		t.connect("timeout",self,"MaybeFlip")
+		var t = get_tree().create_timer(5)
+		t.connect("timeout",self,"SpawnEgg")
+		
 		LandOnFloor()
 
 
@@ -161,5 +178,10 @@ func LandOnFloor():
 	set_collision_mask_bit(0,true)
 
 func MaybeFlip():
-	if(randi() % 2 == 0):
+	if(randi() % 120 == 0):
 		Flip()
+
+var layingegg = false
+func SpawnEgg():
+	return
+	layingegg = true

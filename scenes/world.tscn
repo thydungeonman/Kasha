@@ -161,7 +161,7 @@ autostart = true
 position = Vector2( 457, 47 )
 
 [node name="Position2D3" type="Position2D" parent="."]
-position = Vector2( 149, 77 )
+position = Vector2( 108, 148 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]
