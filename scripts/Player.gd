@@ -14,10 +14,14 @@ export(int) var ACCELERATION = 10
 export(int) var FRICTION = 10
 export(int) var MAX_SPEED = 70
 
+var dashspeeds = [70,100,120,160]  #0-3
 
+
+export var FULLDASHSPEED = 130
 var is_attacking = false
 var rapid_attacking = false
 var pressing_attack = false
+var holdingattack = false
 
 var knockback_dir = Vector2()
 var knockback_wait = 30
@@ -37,6 +41,11 @@ export var powerinvincibletime = 12
 var dontstop = false
 
 
+var dashlevel = 0 #0 = not dashing then 1,2,3
+export var dashtime = 0.6
+var dashtimer = 0.0
+var smallholdtime = .2
+var smallholdtimer = 0.0 #just so we KNOW the player is holding
 #might do a different thing where it just checks when the timer is up if you pressed attack
 # before the timer is up to see of it should attack again
 
@@ -58,7 +67,7 @@ func GoThroughFloor():
 var t
 func _process(delta):
 	
-	
+	LabelCheck()
 	if(Input.is_action_pressed("ui_right") and not controllock):
 		direction = 1
 		facing = 1
@@ -83,15 +92,45 @@ func _process(delta):
 	
 
 var attacking = false
-var pressedattack = false
+var pressedattack = false #ONLY FOR KNOWING IF ATTACK IS PRESSED DURING ATTACK ANIMATION
 var rapidattacking = false
 var attack = null
 var movelock = false
-
+var lastframe = false
+var dashattack = null # ref to the actual attack scene
 #complete rework of attacking
 func Attacks(delta):
+	
+	if(Input.is_action_pressed("ui_action")): # holding the button
+		if(smallholdtimer > smallholdtime): 
+			holdingattack = true
+			if(dashlevel > 0):
+				dashtimer += delta
+				if(dashtimer > dashtime):
+					dashlevel += 1
+					dashtimer = 0.0
+					if(dashlevel > 3):
+						dashlevel = 3
+		smallholdtimer += delta
+	if(Input.is_action_just_released("ui_action")):
+		if(smallholdtimer > smallholdtime):
+			attacking = false
+		if(dashlevel > 0):
+			if(dashattack != null):
+				dashattack.queue_free()
+				dashattack = null
+			attacking = false
+		holdingattack = false
+		dashlevel = 0
+		dashtimer = 0.0
+		smallholdtimer = 0.0
+	
+	
+	
+	
 	if(Input.is_action_just_pressed("ui_action")):
-		if(attacking):
+		holdingattack = true
+		if(attacking and !airattacking):
 			pressedattack = true
 			movelock = true
 		else:
@@ -102,13 +141,16 @@ func Attacks(delta):
 			add_child(t)
 			t.start()
 			attacking = true
-			
-			
+	
+	
+	
+var airattacking = false  #only for knowing if we started attacking when we were the air
 
 func SpawnAttack():
 	if(is_on_floor()):
 		attack = preload("res://scenes/Attack.tscn").instance()
-		controllock = true
+		if(direction == 0):
+			controllock = true
 		add_child(attack)
 		attack.translate(Vector2(15 * facing,0))
 		attack.direction = facing
@@ -118,13 +160,25 @@ func SpawnAttack():
 		add_child(attack)
 		attack.translate(Vector2(0,0))
 		attack.direction = facing
+		airattacking = true
 
 
 func StopAttacking(tim):
 	#if we havent pressed the attack button since attack started then stop attacking and rapid attacking
 	#else we will start to rapid attack
 	tim.queue_free()
-	if(pressedattack):
+	if(holdingattack):
+		#start dash attack if direction != 0
+		if(direction != 0):
+			dashlevel = 1
+			dashattack = load("res://scenes/Dash Attack.tscn").instance()
+			add_child(dashattack)
+			dashattack.position.x = (15 * facing)
+			dashattack.direction = facing
+			return
+		pass
+	
+	if(pressedattack and !airattacking):
 		SpawnAttack()
 		var t = Timer.new()
 		t.wait_time = .25
@@ -136,6 +190,7 @@ func StopAttacking(tim):
 		pass
 	else:
 		attacking = false
+		rapidattacking = false
 		movelock = false
 		pass
 	pass
@@ -150,14 +205,16 @@ func StopInvincible():
 	$invinciblelabel.hide()
 	flashroot.travel("RESET")
 
+var pressedjump = false
 func _physics_process(delta):
 	apply_gravity()
 	HorizontalForces()
 	if(stunned and velocity.x == 0):
 		stunned = false
 		controllock = false
-		t = get_tree().create_timer(invincibletime)
-		t.connect("timeout",self,"StopInvincible",[],CONNECT_ONESHOT)
+		if(invincible):
+			t = get_tree().create_timer(invincibletime)
+			t.connect("timeout",self,"StopInvincible",[],CONNECT_ONESHOT)
 	
 	EggCheck()
 	
@@ -171,9 +228,14 @@ func _physics_process(delta):
 			$Sprite.flip_h = true
 		
 	if is_on_floor():
+		pressedjump = false
+		if(airattacking):
+			attacking = false
+			airattacking = false
 		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
 			global.sfx.PlaySFX("res://SFX/kashajump.wav")
 			velocity.y = JUMP_STRENGTH
+			pressedjump = true
 		
 	else: 
 		if Input.is_action_just_released("ui_accept") and velocity.y < -150:
@@ -196,7 +258,7 @@ func apply_friction():
 func apply_acceleration(movedirection):
 	if(movelock):
 		movedirection = 0
-	velocity.x = move_toward(velocity.x, MAX_SPEED * movedirection, ACCELERATION)
+	velocity.x = move_toward(velocity.x, dashspeeds[dashlevel] * movedirection, ACCELERATION)
 	pass
 
 
@@ -219,6 +281,7 @@ func _on_Hurt_body_entered(body):
 		invincible = true
 		$invinciblelabel.show()
 		flashroot.travel("flash")
+		attacking = false
 #		print("Ouch!")
 	elif(body.is_in_group("Enemies") and !body.stunned and powerinvincible):
 		body.Damage(direction)
@@ -232,21 +295,43 @@ func Slide():
 
 func Anims():
 	
-	if(is_on_floor()):
-		if(direction == 0):
-			root.travel("idle")
-		else:
-			root.travel("walk")
-	else:
-		root.travel("jump")
 	
 	if(attacking):
 		if(is_on_floor()):
-			root.travel("attack")
-			if(rapidattacking):
-				root.travel("attack rapid")
+			if(dashlevel != 0):
+				match dashlevel:
+					1:
+						root.travel("dash")
+					2:
+						root.travel("dash 2")
+					3:
+						root.travel("dash 3")
+			else:
+				if(velocity.x != 0):
+					root.travel("dash start")
+					print("dash start")
+				else:
+					root.travel("attack")
+					print("attack")
+				if(rapidattacking):
+					root.travel("attack rapid")
 		else:
-			root.travel("air spin")
+			if(dashlevel > 1):
+				if(pressedjump):
+					root.travel("air spin super")
+			else:
+				root.travel("air spin")
+	else:
+		if(is_on_floor()):
+			if(direction == 0):
+				root.travel("idle")
+				print("idle")
+			else:
+				root.travel("walk")
+				print("walk")
+		else:
+			if(dashlevel < 1):
+				root.travel("jump")
 
 
 var playbackpos = 0.0
@@ -278,7 +363,7 @@ func PowerUpInvincibleDone():
 	global.music.seek(playbackpos)
 	print(str(playbackpos))
 
-	
+
 
 func EggCheck():
 	for s in range(get_slide_count()):
@@ -306,3 +391,17 @@ func HorizontalForces():
 		pass
 	
 	pass
+
+
+func LabelCheck():
+	$attackinglabel.visible = attacking
+	$airattackinglabel.visible = airattacking
+	$rapidattackinglabel.visible = rapidattacking
+	$controllocklabel.visible = controllock
+	$holdingattacklabel.visible = holdingattack
+	$pressedattacklabel.visible = pressedattack
+	if(dashlevel > 0):
+		$dashlabel.visible = true
+		$dashlabel.text = "dash level: " + str(dashlevel)
+	else:
+		$dashlabel.visible = false

@@ -21,51 +21,52 @@ export var slowdowntme = .2
 export var eggpushvelocity = 150
 
 func _ready():
-	hide()
-	monitoring = false
-	set_process(true)
+#	set_process(true)
 	set_physics_process(true)
 
 
 
 func _process(delta):
 	
-	timer += delta
-	if(timer > lifetime):
-		get_parent().controllock = false
-		get_parent().attack = null
-		queue_free() 
+	pass
 
 func _physics_process(delta):
-	count += 1
-	if(count == 8):
-		monitoring = true
-		show()
-	if(monitoring):
-		for body in get_overlapping_bodies():
-			if(body.is_in_group("Egg")):
-				
-				get_parent().root.travel("attack recoil")
-				get_parent().Hforces.push_back(Vector3(30,6,-direction))
-				body.get_node("AudioStreamPlayer").play()
-				body.direction = direction
-				body.velocity.x += eggpushvelocity 
-				body.get_node("rolltimer").start()
-				get_parent().controllock = false
-				get_parent().attack = null
+	for body in get_overlapping_bodies():
+		if(body.is_in_group("Egg")):
+			get_parent().root.travel("attack recoil")
+			get_parent().Hforces.push_back(Vector3(30,6,-direction))
+			body.get_node("AudioStreamPlayer").play()
+			body.direction = direction
+			body.velocity.x += eggpushvelocity 
+			body.get_node("rolltimer").start()
+			pass
+		if body.is_in_group("Enemies"):
+			if(get_parent().dashlevel == 0):
+				global.SlowDown(slowdowntme,slowdownscale)
+			
+			
+			
+			if(get_parent().dashlevel == 1 and !body.stunned):
 				get_parent().attacking = false
+				get_parent().controllock = true
+				get_parent().stunned = true
+				#get reverse collision direction
+				var hurtdirection = sign(global_position.x - body.global_position.x)
+				print(hurtdirection)
+				get_parent().velocity.y = -150
+				get_parent().velocity.x = 100 * hurtdirection
+				get_parent().dashattack = null
+				body.Damage(direction)
 				queue_free()
 				return
-				pass
-			if body.is_in_group("Enemies"):
-				global.SlowDown(slowdowntme,slowdownscale)
+			else:
 				body.Damage(direction)
-				emit_signal("knockback") 
-				set_physics_process(false) 
-#				if(!get_parent().rapidattacking):
-				get_parent().controllock = false
-				get_parent().attack = null
-				queue_free()
+				emit_signal("knockback")
+				if(get_parent().dashlevel < 3):
+					get_parent().dashlevel = 1
+					get_parent().dashtimer = 0.0
+
+
 	#if we are overlapping with an enemy then damage it and then free ourselves right after
 	#use get_overlapping_bodies() and run through each one in a for loop
 	#if body is in group "rat" or maybe body is in group "enemy"
