@@ -96,8 +96,10 @@ var pressedattack = false #ONLY FOR KNOWING IF ATTACK IS PRESSED DURING ATTACK A
 var rapidattacking = false
 var attack = null
 var movelock = false
+var jumplock = false
 var lastframe = false
 var dashattack = null # ref to the actual attack scene
+var attackvel = 0
 #complete rework of attacking
 func Attacks(delta):
 	
@@ -135,6 +137,7 @@ func Attacks(delta):
 			movelock = true
 		else:
 			SpawnAttack()
+			attackvel = velocity.x
 			var t = Timer.new()
 			t.wait_time = .4
 			t.connect("timeout",self,"StopAttacking",[t],CONNECT_ONESHOT)
@@ -192,6 +195,7 @@ func StopAttacking(tim):
 		attacking = false
 		rapidattacking = false
 		movelock = false
+		
 		pass
 	pass
 	
@@ -232,7 +236,7 @@ func _physics_process(delta):
 		if(airattacking):
 			attacking = false
 			airattacking = false
-		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down"):
+		if Input.is_action_just_pressed("ui_accept") and not controllock and !Input.is_action_pressed("ui_down") and JumpCheck():
 			global.sfx.PlaySFX("res://SFX/kashajump.wav")
 			velocity.y = JUMP_STRENGTH
 			pressedjump = true
@@ -243,6 +247,14 @@ func _physics_process(delta):
 			
 	
 	velocity = move_and_slide(velocity * 60 * delta * (1/Engine.time_scale), Vector2.UP)
+
+func JumpCheck():
+	if(attacking):
+		if(dashlevel > 0):
+			return true
+		else:
+			return false
+	return true
 
 
 func apply_gravity():
@@ -293,6 +305,9 @@ func _on_Hurt_body_entered(body):
 func Slide():
 	pass
 
+
+
+#might rework this a bit
 func Anims():
 	
 	
@@ -307,7 +322,8 @@ func Anims():
 					3:
 						root.travel("dash 3")
 			else:
-				if(velocity.x != 0):
+#				if(velocity.x != 0):
+				if(attackvel != 0):
 					root.travel("dash start")
 					print("dash start")
 				else:

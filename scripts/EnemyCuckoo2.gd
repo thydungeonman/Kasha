@@ -125,6 +125,7 @@ func _on_Timer_timeout():
 func _on_StunHurtBox_body_entered(body):
 	if stunned and body.is_in_group("Players"):
 		flighttimer.paused = true
+		timer.paused = true
 		global.sfx.PlaySFX("res://SFX/enemydeath.wav")
 #		global.Play(preload("res://SFX/enemydeath.wav"))
 		dead = true
@@ -168,7 +169,6 @@ func _on_flighttimer_timeout():
 		t.connect("timeout",self,"SpawnEgg")
 		
 		LandOnFloor()
-
 
 
 func GoThroughFloor():

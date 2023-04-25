@@ -78,6 +78,7 @@ animation = "walk"
 switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=51]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=53]
 switch_mode = 2
@@ -88,6 +89,7 @@ switch_mode = 2
 auto_advance = true
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=55]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=59]
 
@@ -123,6 +125,7 @@ switch_mode = 2
 [sub_resource type="AnimationNodeStateMachineTransition" id=89]
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=90]
+switch_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id=91]
 
@@ -158,7 +161,7 @@ states/jump/position = Vector2( 593, 96 )
 states/walk/node = SubResource( 29 )
 states/walk/position = Vector2( 1127, 277 )
 transitions = [ "idle", "jump", SubResource( 30 ), "idle", "walk", SubResource( 31 ), "idle", "attack", SubResource( 32 ), "jump", "attack", SubResource( 33 ), "walk", "attack", SubResource( 34 ), "walk", "idle", SubResource( 35 ), "attack", "idle", SubResource( 36 ), "jump", "idle", SubResource( 37 ), "attack", "attack rapid", SubResource( 50 ), "attack rapid", "idle", SubResource( 51 ), "attack rapid", "attack rapid2", SubResource( 53 ), "attack rapid2", "attack rapid", SubResource( 54 ), "attack rapid2", "idle", SubResource( 55 ), "attack", "attack recoil", SubResource( 59 ), "attack recoil", "idle", SubResource( 60 ), "jump", "air spin", SubResource( 63 ), "air spin", "idle", SubResource( 64 ), "dash start", "dash", SubResource( 74 ), "dash", "dash 2", SubResource( 75 ), "dash 2", "dash 3", SubResource( 76 ), "dash 3", "walk", SubResource( 77 ), "attack", "dash start", SubResource( 79 ), "dash 2", "air spin super", SubResource( 82 ), "dash 3", "air spin super", SubResource( 83 ), "dash 2", "dash", SubResource( 84 ), "walk", "dash start", SubResource( 87 ), "dash", "idle", SubResource( 88 ), "dash start", "idle", SubResource( 89 ), "dash start", "walk", SubResource( 90 ), "dash", "walk", SubResource( 91 ), "dash 2", "walk", SubResource( 92 ), "walk", "dash 2", SubResource( 93 ) ]
-graph_offset = Vector2( 183.08, 247 )
+graph_offset = Vector2( 187.08, -65 )
 
 [sub_resource type="AnimationNodeStateMachinePlayback" id=19]
 
