@@ -44,6 +44,7 @@ var dontstop = false
 var dashlevel = 0 #0 = not dashing then 1,2,3
 export var dashtime = 0.6
 var dashtimer = 0.0
+var dashdirection = 0
 var smallholdtime = .2
 var smallholdtimer = 0.0 #just so we KNOW the player is holding
 #might do a different thing where it just checks when the timer is up if you pressed attack
@@ -86,6 +87,17 @@ func _process(delta):
 				set_collision_mask_bit(0,false)
 				
 	
+	if(direction != dashdirection):
+		if(dashattack != null):
+				dashattack.queue_free()
+				dashattack = null
+				dashdirection = 0
+				attacking = false
+				holdingattack = false
+				dashlevel = 0
+				dashtimer = 0.0
+				smallholdtimer = 0.0
+	
 	Attacks(delta)
 	
 	Anims()
@@ -121,6 +133,7 @@ func Attacks(delta):
 			if(dashattack != null):
 				dashattack.queue_free()
 				dashattack = null
+				dashdirection = 0
 			attacking = false
 		holdingattack = false
 		dashlevel = 0
@@ -174,6 +187,7 @@ func StopAttacking(tim):
 		#start dash attack if direction != 0
 		if(direction != 0):
 			dashlevel = 1
+			dashdirection = direction
 			dashattack = load("res://scenes/Dash Attack.tscn").instance()
 			add_child(dashattack)
 			dashattack.position.x = (15 * facing)
