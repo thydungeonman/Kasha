@@ -56,6 +56,7 @@ func _physics_process(delta):
 				get_parent().velocity.y = -150
 				get_parent().velocity.x = 100 * hurtdirection
 				get_parent().dashattack = null
+				get_parent().dashlevel = 0
 				body.Damage(direction)
 				queue_free()
 				return
