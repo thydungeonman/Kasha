@@ -109,8 +109,6 @@ func Damage(direction):
 		timer.start()
 
 
-
-
 func _on_Timer_timeout():
 	stunned = false
 	$Sprite.flip_v = false

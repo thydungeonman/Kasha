@@ -21,7 +21,7 @@ export var slowdowntme = .2
 export var eggpushvelocity = 150
 
 func _ready():
-#	set_process(true)
+	set_process(false)
 	set_physics_process(true)
 
 

@@ -50,6 +50,7 @@ var smallholdtimer = 0.0 #just so we KNOW the player is holding
 #might do a different thing where it just checks when the timer is up if you pressed attack
 # before the timer is up to see of it should attack again
 
+var sliding = false
 
 
 func _ready():
@@ -89,19 +90,23 @@ func _process(delta):
 	
 	if(direction != dashdirection):
 		if(dashattack != null):
-				dashattack.queue_free()
-				dashattack = null
-				dashdirection = 0
-				attacking = false
-				holdingattack = false
-				dashlevel = 0
-				dashtimer = 0.0
-				smallholdtimer = 0.0
+			dashattack.queue_free()
+			dashattack = null
+			dashdirection = 0
+			attacking = false
+			holdingattack = false
+			
+			dashtimer = 0.0
+			smallholdtimer = 0.0
+			if(dashlevel == 3):#we need to keep the player facing the same way while we're sliding
+				direction = dashdirection
+				sliding = true
+				movelock = true
+			dashlevel = 0
 	
 	Attacks(delta)
 	
 	Anims()
-	
 
 var attacking = false
 var pressedattack = false #ONLY FOR KNOWING IF ATTACK IS PRESSED DURING ATTACK ANIMATION
@@ -135,6 +140,8 @@ func Attacks(delta):
 				dashattack = null
 				dashdirection = 0
 			attacking = false
+			if(dashlevel == 3):
+				sliding = true
 		holdingattack = false
 		dashlevel = 0
 		dashtimer = 0.0
@@ -183,7 +190,7 @@ func StopAttacking(tim):
 	#if we havent pressed the attack button since attack started then stop attacking and rapid attacking
 	#else we will start to rapid attack
 	tim.queue_free()
-	if(holdingattack):
+	if(holdingattack and attacking):
 		#start dash attack if direction != 0
 		if(direction != 0):
 			dashlevel = 1
@@ -192,8 +199,11 @@ func StopAttacking(tim):
 			add_child(dashattack)
 			dashattack.position.x = (15 * facing)
 			dashattack.direction = facing
+			if(direction == 1):
+				$CPUParticles2D.texture = load("res://sprites/kashaspritesheet dash.png")
+			else:
+				$CPUParticles2D.texture = load("res://sprites/kashaspritesheet dash flip.png")
 			return
-		pass
 	
 	if(pressedattack and !airattacking):
 		SpawnAttack()
@@ -204,15 +214,12 @@ func StopAttacking(tim):
 		t.start()
 		rapidattacking = true
 		pressedattack = false
-		pass
 	else:
 		attacking = false
 		rapidattacking = false
 		movelock = false
 		
-		pass
-	pass
-	
+
 func StopRapidAttacking():
 	if(!dontstop):
 		is_attacking = false
@@ -236,14 +243,21 @@ func _physics_process(delta):
 	
 	EggCheck()
 	
-	if direction == 0:
+	if direction == 0 and !sliding:
 		apply_friction();
 	else:
-		apply_acceleration(direction);
-		if direction > 0:
-			$Sprite.flip_h = false
-		elif direction < 0:
-			$Sprite.flip_h = true
+		if(!sliding):
+			apply_acceleration(direction);
+			if direction > 0:
+				$Sprite.flip_h = false
+			elif direction < 0:
+				$Sprite.flip_h = true
+		else:
+			velocity.x = move_toward(velocity.x,0,4)
+			print(velocity.x)
+			if(velocity.x == 0):
+				sliding = false
+				movelock = false
 		
 	if is_on_floor():
 		pressedjump = false
@@ -254,6 +268,10 @@ func _physics_process(delta):
 			global.sfx.PlaySFX("res://SFX/kashajump.wav")
 			velocity.y = JUMP_STRENGTH
 			pressedjump = true
+			if(sliding):
+				sliding = false
+				movelock = false
+			
 		
 	else: 
 		if Input.is_action_just_released("ui_accept") and velocity.y < -150:
@@ -285,7 +303,7 @@ func apply_acceleration(movedirection):
 	if(movelock):
 		movedirection = 0
 	velocity.x = move_toward(velocity.x, dashspeeds[dashlevel] * movedirection, ACCELERATION)
-	pass
+		
 
 
 func _on_Hurt_body_entered(body):
@@ -339,10 +357,10 @@ func Anims():
 #				if(velocity.x != 0):
 				if(attackvel != 0):
 					root.travel("dash start")
-					print("dash start")
+#					print("dash start")
 				else:
 					root.travel("attack")
-					print("attack")
+#					print("attack")
 				if(rapidattacking):
 					root.travel("attack rapid")
 		else:
@@ -351,14 +369,16 @@ func Anims():
 					root.travel("air spin super")
 			else:
 				root.travel("air spin")
+	elif(sliding):
+		root.travel("slide")
 	else:
 		if(is_on_floor()):
 			if(direction == 0):
 				root.travel("idle")
-				print("idle")
+#				print("idle")
 			else:
 				root.travel("walk")
-				print("walk")
+#				print("walk")
 		else:
 			if(dashlevel < 1):
 				root.travel("jump")

@@ -21,6 +21,7 @@ extents = Vector2( 290.312, 1 )
 [node name="Node2D" type="Node2D"]
 
 [node name="Level1Temp" type="Sprite" parent="."]
+visible = false
 position = Vector2( 480, 108 )
 texture = ExtResource( 4 )
 
@@ -77,6 +78,4 @@ texture = ExtResource( 1 )
 position = Vector2( 136, 185 )
 
 [node name="EnemyCuckoo2" parent="." instance=ExtResource( 5 )]
-position = Vector2( 288, 117 )
-freq = 5
-amplitude = 70
+position = Vector2( 325, 115 )
