@@ -15,7 +15,7 @@ onready var anim = get_node("AnimationPlayer")
 var rollbuffer = 0
 
 func _ready():
-	$eggtimer.wait_time = timetohatch
+#	$eggtimer.wait_time = timetohatch
 	$eggtimer.start()
 	
 	pass # Replace with function body.
@@ -32,6 +32,7 @@ func _physics_process(delta):
 			fellfromheight = false
 			print(anim.connect("animation_finished",self,"Die",[],CONNECT_ONESHOT))
 			$AnimationPlayer.play("break")
+			$eggtimer.stop()
 			$rolltimer.stop()
 			set_physics_process(false)
 			return

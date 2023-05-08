@@ -22,6 +22,7 @@ export var landing = false
 
 onready var timer = get_node("Timer")
 onready var flighttimer = get_node("flighttimer")
+var egg = null
 
 func _ready():
 	freqtemp = freq
@@ -33,7 +34,7 @@ func _physics_process(delta):
 	OutOfBoundsCheck()
 	
 	if(layingegg):
-		var egg = load("res://scenes/EnemyEgg.tscn").instance()
+		egg = load("res://scenes/EnemyEgg.tscn").instance()
 		get_parent().add_child(egg)
 		move_and_collide(Vector2(0,-30))
 		egg.position = position + Vector2(0,20) 
@@ -56,6 +57,8 @@ func _physics_process(delta):
 	else:
 		#just bump her like the rat and apply gravity
 		velocity.y += GRAVITY
+		if(is_on_floor()):
+			velocity.y = 0
 		if(!dead):
 			velocity.x -= velocity.x/knockback_deceleration_stunned
 		else:
@@ -153,14 +156,18 @@ func _on_flighttimer_timeout():
 			time = PI/2
 			GoThroughFloor()
 		else:
+			GoThroughFloor()#this needs to be on both so the egg doesn't get hit
 			time = PI
 		landing = false
 		get_node("AnimationPlayer").play("flying")
 		flighttimer.stop()
 		flighttimer.wait_time = 10.0 + (randf() * 2)
 		flighttimer.start()
+#		if(egg != null):
+#			egg.set_collision_layer_bit(4,false)
 	else:
 		landing = true
+		flighttimer.stop()
 		flighttimer.wait_time = 5.0 + (randf() * 2)
 		flighttimer.start()
 		var t = get_tree().create_timer(5)
@@ -181,5 +188,4 @@ func MaybeFlip():
 
 var layingegg = false
 func SpawnEgg():
-	return
 	layingegg = true

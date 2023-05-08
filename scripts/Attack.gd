@@ -54,6 +54,11 @@ func _physics_process(delta):
 				get_parent().controllock = false
 				get_parent().attack = null
 				get_parent().attacking = false
+				print("egg")
+				print(str(body.get_node("eggtimer").time_left))
+				body.get_node("eggtimer").stop()
+				body.get_node("eggtimer").start()
+				print(str(body.get_node("eggtimer").time_left))
 				queue_free()
 				return
 				pass
