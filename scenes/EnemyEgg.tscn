@@ -387,7 +387,7 @@ tracks/1/keys = {
 }
 
 [node name="EnemyEgg" groups=["Egg"] instance=ExtResource( 1 )]
-collision_layer = 5
+collision_layer = 20
 script = ExtResource( 3 )
 timetohatch = 3.0
 pushspeed = 30

@@ -8,7 +8,7 @@ signal knockback
 #this includes right when the game starts or the scene starts
 #so they need at least one frame to update
 
-var lifetime = .2 #the time until deleted in seconds
+var lifetime = .3 #the time until deleted in seconds
 var timer = 0.0 # the variable that will count the time for us
 
 var direction = 1
@@ -19,6 +19,7 @@ var count = 0
 export var slowdownscale = .8
 export var slowdowntme = .2
 export var eggpushvelocity = 150
+export var enemypushvelocity = Vector2(100,-150)
 
 func _ready():
 	hide()
@@ -37,14 +38,33 @@ func _process(delta):
 		queue_free() 
 
 func _physics_process(delta):
+	Count(delta)
+	Collide()
+	
+	#if we are overlapping with an enemy then damage it and then free ourselves right after
+	#use get_overlapping_bodies() and run through each one in a for loop
+	#if body is in group "rat" or maybe body is in group "enemy"
+	#body.Bonk()
+	#queue_free()  so the hit box doesn't stick around any longer  sometimes queue_free() can take a frame or two to finally delete the scene though
+	#set_physics_process(false)   so we dont keep detecting enemies and hitting them
+	
+	#instead of the above two lines we could just call free() which deletes the scene immediately
+	#but people say that queue_free() is generally safer in terms of memory or whatever
+	#ive never had any problems with just using free() when ive had to
+	pass
+
+
+func Count(delta):
 	count += 1
 	if(count == 8):
 		monitoring = true
 		show()
+	pass
+
+func Collide():
 	if(monitoring):
 		for body in get_overlapping_bodies():
 			if(body.is_in_group("Egg")):
-				
 				get_parent().root.travel("attack recoil")
 				get_parent().Hforces.push_back(Vector3(30,6,-direction))
 				body.get_node("AudioStreamPlayer").play()
@@ -71,14 +91,3 @@ func _physics_process(delta):
 				get_parent().controllock = false
 				get_parent().attack = null
 				queue_free()
-	#if we are overlapping with an enemy then damage it and then free ourselves right after
-	#use get_overlapping_bodies() and run through each one in a for loop
-	#if body is in group "rat" or maybe body is in group "enemy"
-	#body.Bonk()
-	#queue_free()  so the hit box doesn't stick around any longer  sometimes queue_free() can take a frame or two to finally delete the scene though
-	#set_physics_process(false)   so we dont keep detecting enemies and hitting them
-	
-	#instead of the above two lines we could just call free() which deletes the scene immediately
-	#but people say that queue_free() is generally safer in terms of memory or whatever
-	#ive never had any problems with just using free() when ive had to
-	pass

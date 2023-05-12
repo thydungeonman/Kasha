@@ -120,7 +120,7 @@ var attackvel = 0
 #complete rework of attacking
 func Attacks(delta):
 	
-	if(Input.is_action_pressed("ui_action")): # holding the button
+	if(Input.is_action_pressed("ui_action") and attacking): # holding the button
 		if(smallholdtimer > smallholdtime): 
 			holdingattack = true
 			if(dashlevel > 0):
@@ -178,12 +178,13 @@ func SpawnAttack():
 		attack.translate(Vector2(15 * facing,0))
 		attack.direction = facing
 	else:
-		attack = preload("res://scenes/Attack spin.tscn").instance()
-#		controllock = true
-		add_child(attack)
-		attack.translate(Vector2(0,0))
-		attack.direction = facing
-		airattacking = true
+		if(!airattacking):
+			attack = preload("res://scenes/Attack spin.tscn").instance()
+	#		controllock = true
+			add_child(attack)
+			attack.translate(Vector2(0,0))
+			attack.direction = facing
+			airattacking = true
 
 
 func StopAttacking(tim):
@@ -192,7 +193,7 @@ func StopAttacking(tim):
 	tim.queue_free()
 	if(holdingattack and attacking):
 		#start dash attack if direction != 0
-		if(direction != 0):
+		if(direction != 0 and is_on_floor()):
 			dashlevel = 1
 			dashdirection = direction
 			dashattack = load("res://scenes/Dash Attack.tscn").instance()

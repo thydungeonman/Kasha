@@ -93,14 +93,17 @@ func Fly(delta):
 		LandOnFloor()
 		freq = freqtemp
 
-func Damage(direction):
+func Damage(direction,newvelocity = null):
 	if(!stunned): #if we aren't stunned when we are hit
 		LandOnFloor()
 		landing = false
 		flighttimer.paused = true
 		global.sfx.PlaySFX("res://SFX/enemyhurt.wav")
 		stunned = true
-		velocity = knockback_velocity_stunned
+		if(newvelocity != null):
+			velocity = newvelocity
+		else:
+			velocity = knockback_velocity_stunned
 		knockbackdirection = direction
 		$Sprite.flip_v =  true
 		get_node("AnimationPlayer").play("standing")
@@ -163,15 +166,15 @@ func _on_flighttimer_timeout():
 		flighttimer.stop()
 		flighttimer.wait_time = 10.0 + (randf() * 2)
 		flighttimer.start()
-#		if(egg != null):
-#			egg.set_collision_layer_bit(4,false)
+		if(egg != null):
+			set_collision_mask_bit(4,false)
 	else:
 		landing = true
 		flighttimer.stop()
 		flighttimer.wait_time = 5.0 + (randf() * 2)
 		flighttimer.start()
 		var t = get_tree().create_timer(5)
-		t.connect("timeout",self,"SpawnEgg")
+		t.connect("timeout",self,"SpawnEgg",[],CONNECT_ONESHOT)
 		
 		LandOnFloor()
 
@@ -186,6 +189,8 @@ func MaybeFlip():
 	if(randi() % 120 == 0):
 		Flip()
 
+
 var layingegg = false
 func SpawnEgg():
 	layingegg = true
+	set_collision_mask_bit(4,true)

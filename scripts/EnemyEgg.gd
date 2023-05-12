@@ -114,6 +114,7 @@ func Die():
 	pass
 
 func Break():
+	BecomeEthereal()
 	$AudioStreamPlayer2.play()
 
 #put down a bird where the egg was,  probably have its flight level be just above where the egg was
@@ -128,14 +129,13 @@ func SpawnBird():
 		bird.Flip()
 	bird._on_flighttimer_timeout()
 	bird.flighttimer.stop()
-	bird.flighttimer.wait_time = 1
 	bird.flighttimer.start()
 	bird.connect("died",self,"AnotherOneGone")
 
 
 func BecomeEthereal():
 	set_collision_layer_bit(2,false)
-	set_collision_layer_bit(0,false)
+	set_collision_layer_bit(4,false)
 	pass
 
 

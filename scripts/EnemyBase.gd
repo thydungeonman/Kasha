@@ -35,7 +35,7 @@ func Flip():
 		knockbackdirection *= -1
 	$Sprite.flip_h = !$Sprite.flip_h
 
-func Damage(dir):
+func Damage(dir,newvelocity = null):
 	pass
 
 func TrueVelocity():

@@ -44,12 +44,15 @@ func _physics_process(delta):
 #called by the attack scene when it overlaps with an enemy body
 #the direction parameter is passed from the player to the attack scene and then to the rat 
 #so we know which direction the rat was hit from
-func Damage(direction):
+func Damage(direction,newvelocity = null):
 	if(!stunned): #if we aren't stunned when we are hit
 		global.sfx.PlaySFX("res://SFX/enemyhurt.wav")
 #		global.Play(preload("res://SFX/enemyhurt.wav"))
 		stunned = true
-		velocity = knockback_velocity_stunned
+		if(newvelocity != null):
+			velocity = newvelocity
+		else:
+			velocity = knockback_velocity_stunned
 		knockbackdirection = direction
 		sprite.flip_v = !sprite.flip_v
 		timer.start()
