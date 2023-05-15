@@ -14,13 +14,44 @@ onready var anim = get_node("AnimationPlayer")
 
 var rollbuffer = 0
 
+var enemies = []
+var lastoverlapenemies = []
+
+
 func _ready():
+	set_collision_layer_bit(2,true)
+	health = 3
 #	$eggtimer.wait_time = timetohatch
 	$eggtimer.start()
 	
-	pass # Replace with function body.
+	
 
 func _physics_process(delta):
+	if(velocity == Vector2()):
+		$ratbox.monitoring = false
+		set_collision_layer_bit(9,true)
+	else:
+		$ratbox.monitoring = true
+		set_collision_layer_bit(9,false)
+	
+	if($ratbox.monitoring):
+		enemies = $ratbox.get_overlapping_bodies()
+		for body in enemies:
+			if(body.is_in_group("Players")):
+				continue
+			if(body.is_in_group("Egg")):
+				continue
+			if(!lastoverlapenemies.has(body)):
+				if(!body.stunned):
+					var a  = body.name
+					print(str(a))
+					print(a)
+					body.Damage(direction)
+					
+		lastoverlapenemies = enemies
+	
+	
+	
 #	print(delta)
 	velocity.y += GRAVITY
 #	print(velocity.y)
@@ -83,6 +114,13 @@ func _physics_process(delta):
 		
 	pass
 
+func Damage(dir,newvelocity = null):
+	health -= 1
+	if(health == 0):
+		$AnimationPlayer.play("break")
+		return true
+	return false
+
 func Push(dir):
 	print(dir)
 	direction = dir
@@ -104,9 +142,8 @@ func _on_rolltimer_timeout():
 		$rolltimer.start()
 	
 	
-	pass # Replace with function body.
 
-#thisi s a descriptiong
+
 func Die():
 	print("WHAT")
 	emit_signal("died")
@@ -114,11 +151,16 @@ func Die():
 	pass
 
 func Break():
+	set_physics_process(false)
+	$ratbox.monitoring = false
 	BecomeEthereal()
 	$AudioStreamPlayer2.play()
 
 #put down a bird where the egg was,  probably have its flight level be just above where the egg was
 func SpawnBird():
+	BecomeEthereal()
+	$ratbox.monitoring = false
+	set_physics_process(false)
 	var bird = load("res://scenes/EnemyCuckoo2.tscn").instance()
 	get_parent().add_child(bird)
 	var p = global_position

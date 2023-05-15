@@ -75,11 +75,10 @@ func _on_Timer_timeout():
 	stunned = false
 	sprite.flip_v = !sprite.flip_v
 	timer.stop()
-	pass # Replace with function body.
 
 
 func _on_StunHurtBox_body_entered(body):
-	if stunned and body.is_in_group("Players"):
+	if stunned and (body.is_in_group("Players") or (body.is_in_group("Egg") and body.velocity.x > 1)):
 		global.sfx.PlaySFX("res://SFX/enemydeath.wav")
 #		global.Play(preload("res://SFX/enemydeath.wav"))
 		dead = true
@@ -90,7 +89,7 @@ func _on_StunHurtBox_body_entered(body):
 		TurnOffCollision()
 		emit_signal("died")
 		Die()
-	pass # Replace with function body.
+
 
 
 

@@ -67,18 +67,20 @@ func Collide():
 			if(body.is_in_group("Egg")):
 				get_parent().root.travel("attack recoil")
 				get_parent().Hforces.push_back(Vector3(30,6,-direction))
-				body.get_node("AudioStreamPlayer").play()
-				body.direction = direction
-				body.velocity.x += eggpushvelocity 
-				body.get_node("rolltimer").start()
+				
 				get_parent().controllock = false
 				get_parent().attack = null
 				get_parent().attacking = false
 				print("egg")
 				print(str(body.get_node("eggtimer").time_left))
-				body.get_node("eggtimer").stop()
-				body.get_node("eggtimer").start()
-				print(str(body.get_node("eggtimer").time_left))
+				body.get_node("AudioStreamPlayer").play()
+				if(!body.Damage(direction)):
+					body.direction = direction
+					body.velocity.x += eggpushvelocity 
+					body.get_node("rolltimer").start()
+					body.get_node("eggtimer").stop()
+					body.get_node("eggtimer").start()
+					print(str(body.get_node("eggtimer").time_left))
 				queue_free()
 				return
 				pass

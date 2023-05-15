@@ -28,16 +28,18 @@ func _ready():
 	freqtemp = freq
 	$AnimationPlayer.play("flying")
 	set_physics_process(true)
-	pass # Replace with function body.
+	
 
 func _physics_process(delta):
 	OutOfBoundsCheck()
 	
 	if(layingegg):
 		egg = load("res://scenes/EnemyEgg.tscn").instance()
-		get_parent().add_child(egg)
 		move_and_collide(Vector2(0,-30))
 		egg.position = position + Vector2(0,20) 
+		get_parent().add_child(egg)
+		var oldpos = position
+		
 		layingegg = false
 	
 	
@@ -127,7 +129,7 @@ func _on_Timer_timeout():
 
 
 func _on_StunHurtBox_body_entered(body):
-	if stunned and body.is_in_group("Players"):
+	if stunned and body.is_in_group("Players") or (body.is_in_group("Egg") and body.velocity.x > 1):
 		flighttimer.paused = true
 		timer.paused = true
 		global.sfx.PlaySFX("res://SFX/enemydeath.wav")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://scenes/EnemyBase.tscn" type="PackedScene" id=1]
 [ext_resource path="res://sprites/egg-sheet.png" type="Texture" id=2]
@@ -386,21 +386,24 @@ tracks/1/keys = {
 "values": [ false, true ]
 }
 
+[sub_resource type="CircleShape2D" id=9]
+radius = 11.0
+
 [node name="EnemyEgg" groups=["Egg"] instance=ExtResource( 1 )]
-collision_layer = 20
+collision_layer = 528
 script = ExtResource( 3 )
 timetohatch = 3.0
 pushspeed = 30
 slowdown = 10
 rollgranularity = 10
 
-[node name="Sprite" parent="." index="0"]
-texture = ExtResource( 2 )
-hframes = 18
-
-[node name="CollisionShape2D" parent="." index="1"]
+[node name="CollisionShape2D" parent="." index="0"]
 position = Vector2( 0, 1.5 )
 shape = SubResource( 1 )
+
+[node name="Sprite" parent="." index="1"]
+texture = ExtResource( 2 )
+hframes = 18
 
 [node name="StunHurtBox" parent="." index="4"]
 visible = false
@@ -442,6 +445,13 @@ visible = false
 texture = ExtResource( 2 )
 hframes = 18
 frame = 12
+
+[node name="ratbox" type="Area2D" parent="." index="13"]
+collision_layer = 0
+collision_mask = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ratbox" index="0"]
+shape = SubResource( 9 )
 
 [connection signal="timeout" from="rolltimer" to="." method="_on_rolltimer_timeout"]
 [connection signal="timeout" from="eggtimer" to="." method="_on_eggtimer_timeout"]
