@@ -14,7 +14,7 @@ func _ready():
 	var b = randi() % global.LEVELSONGS.size()
 	var a = global.LEVELSONGS.values()[b]
 	global.PlaySong(a)
-	set_process(true)
+#	set_process(true)
 
 func _process(delta):
 	lastkill += delta
@@ -22,6 +22,7 @@ func _process(delta):
 		multiplier = 1.0
 
 func _on_Timer_timeout():
+	return
 	if(numrats > 0 and monstercount < enemylimit):
 		if(randi()% 4 == 0): #1 in 4 chance of spawning a bird
 			var bird = load("res://scenes/EnemyCuckoo2.tscn").instance()

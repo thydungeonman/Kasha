@@ -1,39 +1,72 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=29 format=2]
 
 [ext_resource path="res://scenes/Player.tscn" type="PackedScene" id=1]
 [ext_resource path="res://Camera.tscn" type="PackedScene" id=2]
-[ext_resource path="res://tilesheets/kitchentileset-v1.png" type="Texture" id=4]
+[ext_resource path="res://sprites/level/lv1-layer1.png" type="Texture" id=3]
+[ext_resource path="res://sprites/background/lv1-layer5.png" type="Texture" id=4]
 [ext_resource path="res://scenes/Level1.gd" type="Script" id=5]
+[ext_resource path="res://sprites/background/cloud right.png" type="Texture" id=6]
+[ext_resource path="res://sprites/background/cloud left.png" type="Texture" id=7]
+[ext_resource path="res://sprites/background/lv1-layer4.png" type="Texture" id=8]
+[ext_resource path="res://sprites/background/lv1-layer2.png" type="Texture" id=9]
+[ext_resource path="res://sprites/background/lv1-layer6.png" type="Texture" id=10]
+[ext_resource path="res://sprites/background/tree left.png" type="Texture" id=11]
+[ext_resource path="res://sprites/background/sky.png" type="Texture" id=12]
 
 [sub_resource type="RectangleShape2D" id=5]
-extents = Vector2( 240, 2.5 )
+extents = Vector2( 499, 2.5 )
 
 [sub_resource type="RectangleShape2D" id=12]
 extents = Vector2( 4, 119.5 )
 
-[sub_resource type="RectangleShape2D" id=6]
-extents = Vector2( 32, 1 )
-
-[sub_resource type="RectangleShape2D" id=9]
-extents = Vector2( 63, 1 )
-
-[sub_resource type="RectangleShape2D" id=13]
-extents = Vector2( 32, 1 )
-
-[sub_resource type="RectangleShape2D" id=11]
-extents = Vector2( 32.5, 0.5 )
-
 [sub_resource type="RectangleShape2D" id=7]
-extents = Vector2( 48, 1 )
-
-[sub_resource type="RectangleShape2D" id=10]
-extents = Vector2( 32, 1 )
-
-[sub_resource type="RectangleShape2D" id=8]
 extents = Vector2( 17, 1 )
 
+[sub_resource type="RectangleShape2D" id=13]
+extents = Vector2( 64, 2 )
+
 [sub_resource type="RectangleShape2D" id=14]
-extents = Vector2( 32, 1 )
+extents = Vector2( 66, 1.5 )
+
+[sub_resource type="RectangleShape2D" id=15]
+extents = Vector2( 23, 2 )
+
+[sub_resource type="RectangleShape2D" id=16]
+extents = Vector2( 45, 2 )
+
+[sub_resource type="RectangleShape2D" id=8]
+extents = Vector2( 78, 1 )
+
+[sub_resource type="RectangleShape2D" id=17]
+extents = Vector2( 79.5, 1.5 )
+
+[sub_resource type="RectangleShape2D" id=18]
+extents = Vector2( 78.5, 1.5 )
+
+[sub_resource type="RectangleShape2D" id=19]
+extents = Vector2( 52.5, 2 )
+
+[sub_resource type="RectangleShape2D" id=20]
+extents = Vector2( 16.5, 2 )
+
+[sub_resource type="RectangleShape2D" id=21]
+extents = Vector2( 46, 1.5 )
+
+[sub_resource type="RectangleShape2D" id=22]
+extents = Vector2( 26.5, 1 )
+
+[sub_resource type="RectangleShape2D" id=23]
+extents = Vector2( 28.5, 1.5 )
+
+[sub_resource type="Environment" id=24]
+background_energy = 0.0
+glow_levels/1 = true
+glow_levels/2 = true
+glow_levels/3 = false
+glow_levels/5 = false
+glow_intensity = 0.76
+glow_strength = 1.47
+glow_blend_mode = 0
 
 [node name="world" type="Node2D"]
 script = ExtResource( 5 )
@@ -43,22 +76,33 @@ position = Vector2( 123, 77 )
 
 [node name="Kitchentileset-v1" type="Sprite" parent="."]
 position = Vector2( 240, 106 )
-texture = ExtResource( 4 )
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Sprite" type="Sprite" parent="Kitchentileset-v1"]
+texture = ExtResource( 9 )
 
 [node name="Player" parent="." instance=ExtResource( 1 )]
 position = Vector2( 120, 43 )
 
 [node name="Camera2D" parent="Player" instance=ExtResource( 2 )]
+limit_left = -240
+limit_right = 720
+smoothing_speed = 25.0
+editor_draw_screen = false
+editor_draw_limits = false
 
 [node name="floor" type="StaticBody2D" parent="."]
-position = Vector2( 123, 96 )
+position = Vector2( 123, 97 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
-position = Vector2( 117, 68.5 )
+position = Vector2( 120, 68.5 )
 shape = SubResource( 5 )
 
 [node name="wall left" type="StaticBody2D" parent="."]
-position = Vector2( 123, 97 )
+position = Vector2( -118, 97 )
 collision_layer = 8388609
 collision_mask = 8388609
 
@@ -67,7 +111,7 @@ position = Vector2( -126, 5 )
 shape = SubResource( 12 )
 
 [node name="wall right" type="StaticBody2D" parent="."]
-position = Vector2( 608, 97 )
+position = Vector2( 850, 97 )
 collision_layer = 8388609
 collision_mask = 8388609
 
@@ -75,71 +119,83 @@ collision_mask = 8388609
 position = Vector2( -126, 15.5 )
 shape = SubResource( 12 )
 
-[node name="bottomlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 97 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneleft"]
-position = Vector2( -27, 34 )
-shape = SubResource( 6 )
-one_way_collision = true
-
-[node name="bottomlanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 97 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlanemid"]
-position = Vector2( 101, 34 )
-shape = SubResource( 9 )
-one_way_collision = true
-
-[node name="bottomlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 97 )
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlaneright"]
-position = Vector2( 213, 34 )
-shape = SubResource( 13 )
-one_way_collision = true
-
-[node name="toplaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
+[node name="toplane" type="StaticBody2D" parent="." groups=["notfloor"]]
 position = Vector2( 123, 34 )
 collision_mask = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneleft"]
-position = Vector2( -27.5, 33.5 )
-shape = SubResource( 11 )
-one_way_collision = true
-
-[node name="toplanemid" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 34 )
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="toplanemid"]
-position = Vector2( 100, 34 )
+[node name="CollisionShape2D" type="CollisionShape2D" parent="toplane"]
+position = Vector2( -123, 33 )
 shape = SubResource( 7 )
 one_way_collision = true
 
-[node name="toplaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 34 )
-collision_mask = 0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="toplaneright"]
-position = Vector2( 213, 34 )
-shape = SubResource( 10 )
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="toplane"]
+position = Vector2( 13, 34 )
+shape = SubResource( 13 )
 one_way_collision = true
 
-[node name="midlaneleft" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 123, 34 )
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="toplane"]
+position = Vector2( 189, 33.5 )
+shape = SubResource( 14 )
+one_way_collision = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneleft"]
-position = Vector2( 21, 65 )
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="toplane"]
+position = Vector2( 435, 40 )
+shape = SubResource( 15 )
+one_way_collision = true
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="toplane"]
+position = Vector2( 534, 34 )
+shape = SubResource( 16 )
+one_way_collision = true
+
+[node name="bottomlane" type="StaticBody2D" parent="." groups=["notfloor"]]
+position = Vector2( -244, 68 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="bottomlane"]
+position = Vector2( 82, 65 )
 shape = SubResource( 8 )
 one_way_collision = true
 
-[node name="midlaneright" type="StaticBody2D" parent="." groups=["notfloor"]]
-position = Vector2( 380, 34 )
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="bottomlane"]
+position = Vector2( 365.5, 64.5 )
+shape = SubResource( 17 )
+one_way_collision = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="midlaneright"]
-position = Vector2( 36, 65 )
-shape = SubResource( 14 )
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="bottomlane"]
+position = Vector2( 556.5, 64.5 )
+shape = SubResource( 18 )
+one_way_collision = true
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="bottomlane"]
+position = Vector2( 803.5, 65 )
+shape = SubResource( 19 )
+one_way_collision = true
+
+[node name="midlane" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="midlane"]
+position = Vector2( 217.5, 101 )
+shape = SubResource( 20 )
+one_way_collision = true
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="midlane"]
+position = Vector2( 657, 112.5 )
+shape = SubResource( 21 )
+one_way_collision = true
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="midlane"]
+position = Vector2( 450.5, 143 )
+shape = SubResource( 22 )
+one_way_collision = true
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="midlane"]
+position = Vector2( 450.5, 120 )
+shape = SubResource( 22 )
+one_way_collision = true
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="midlane"]
+position = Vector2( 450.5, 95.5 )
+shape = SubResource( 23 )
 one_way_collision = true
 
 [node name="Timer" type="Timer" parent="."]
@@ -161,6 +217,76 @@ position = Vector2( 457, 47 )
 
 [node name="Position2D3" type="Position2D" parent="."]
 position = Vector2( 108, 148 )
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+offset = Vector2( 242, 106 )
+transform = Transform2D( 1, 0, 0, 1, 242, 106 )
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+
+[node name="sky" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 12 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.99, 1 )
+
+[node name="clouds" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource( 7 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="clouds right" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
+texture = ExtResource( 6 )
+offset = Vector2( -10, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2( 1, 0 )
+motion_scale = Vector2( 0.95, 1 )
+
+[node name="beach" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
+texture = ExtResource( 10 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
+position = Vector2( 1, 0 )
+
+[node name="fence" type="Sprite" parent="ParallaxBackground/ParallaxLayer4"]
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ParallaxLayer5" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 1.05, 1 )
+
+[node name="ocean right" type="Sprite" parent="ParallaxBackground/ParallaxLayer5"]
+texture = ExtResource( 8 )
+offset = Vector2( 24, 0 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="ParallaxLayer6" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 1.1, 1 )
+motion_offset = Vector2( -10, 0 )
+
+[node name="tree" type="Sprite" parent="ParallaxBackground/ParallaxLayer6"]
+texture = ExtResource( 11 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 24 )
 
 [connection signal="timeout" from="Timer" to="." method="_on_Timer_timeout"]
 [connection signal="timeout" from="roundtime" to="." method="_on_roundtime_timeout"]

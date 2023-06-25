@@ -14,7 +14,7 @@ export(int) var ACCELERATION = 10
 export(int) var FRICTION = 10
 export(int) var MAX_SPEED = 70
 
-var dashspeeds = [70,100,120,160]  #0-3
+var dashspeeds = [80,100,120,160]  #0-3
 
 
 export var FULLDASHSPEED = 130
@@ -87,6 +87,9 @@ func _process(delta):
 				t.connect("timeout",self,"GoThroughFloor",[],CONNECT_ONESHOT)
 				set_collision_mask_bit(0,false)
 				
+	if(Input.is_action_just_pressed("ui_cancel")):
+		get_tree().quit()
+	
 	
 	if(direction != dashdirection):
 		if(dashattack != null):
