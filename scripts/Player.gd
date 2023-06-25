@@ -87,7 +87,7 @@ func _process(delta):
 				t.connect("timeout",self,"GoThroughFloor",[],CONNECT_ONESHOT)
 				set_collision_mask_bit(0,false)
 				
-	if(Input.is_action_just_pressed("ui_cancel")):
+	if(Input.is_action_just_pressed("escape")):
 		get_tree().quit()
 	
 	
