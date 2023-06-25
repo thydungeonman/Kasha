@@ -231,7 +231,8 @@ __meta__ = {
 }
 
 [node name="ParallaxLayer2" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 1.01, 1 )
+motion_scale = Vector2( 0.95, 1 )
+motion_offset = Vector2( 10, 0 )
 
 [node name="clouds" type="Sprite" parent="ParallaxBackground/ParallaxLayer2"]
 texture = ExtResource( 7 )
@@ -248,7 +249,8 @@ __meta__ = {
 
 [node name="ParallaxLayer3" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2( 1, 0 )
-motion_scale = Vector2( 1.05, 1 )
+motion_scale = Vector2( 0.9, 1 )
+motion_offset = Vector2( 10, 0 )
 
 [node name="beach left" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
 texture = ExtResource( 10 )
@@ -258,6 +260,7 @@ __meta__ = {
 
 [node name="ParallaxLayer4" type="ParallaxLayer" parent="ParallaxBackground"]
 position = Vector2( 1, 0 )
+motion_scale = Vector2( 0.85, 1 )
 
 [node name="fence" type="Sprite" parent="ParallaxBackground/ParallaxLayer4"]
 texture = ExtResource( 4 )
@@ -276,7 +279,8 @@ __meta__ = {
 }
 
 [node name="ParallaxLayer6" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.9, 1 )
+motion_scale = Vector2( 0.8, 1 )
+motion_offset = Vector2( 15, 0 )
 
 [node name="tree" type="Sprite" parent="ParallaxBackground/ParallaxLayer6"]
 texture = ExtResource( 11 )
