@@ -9,8 +9,8 @@
 [ext_resource path="res://sprites/background/cloud left.png" type="Texture" id=7]
 [ext_resource path="res://sprites/background/new beach right.png" type="Texture" id=8]
 [ext_resource path="res://sprites/background/lv1-layer2.png" type="Texture" id=9]
-[ext_resource path="res://sprites/background/lv1-layer6.png" type="Texture" id=10]
-[ext_resource path="res://sprites/background/tree left.png" type="Texture" id=11]
+[ext_resource path="res://sprites/background/new beach left.png" type="Texture" id=10]
+[ext_resource path="res://sprites/background/new tree.png" type="Texture" id=11]
 [ext_resource path="res://sprites/background/sky.png" type="Texture" id=12]
 
 [sub_resource type="RectangleShape2D" id=5]
@@ -250,7 +250,7 @@ __meta__ = {
 position = Vector2( 1, 0 )
 motion_scale = Vector2( 0.95, 1 )
 
-[node name="beach" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
+[node name="beach left" type="Sprite" parent="ParallaxBackground/ParallaxLayer3"]
 texture = ExtResource( 10 )
 __meta__ = {
 "_edit_lock_": true
@@ -268,7 +268,7 @@ __meta__ = {
 [node name="ParallaxLayer5" type="ParallaxLayer" parent="ParallaxBackground"]
 motion_scale = Vector2( 1.05, 1 )
 
-[node name="ocean right" type="Sprite" parent="ParallaxBackground/ParallaxLayer5"]
+[node name="beach right" type="Sprite" parent="ParallaxBackground/ParallaxLayer5"]
 texture = ExtResource( 8 )
 offset = Vector2( 24, 0 )
 __meta__ = {
