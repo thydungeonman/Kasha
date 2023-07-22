@@ -269,8 +269,7 @@ __meta__ = {
 }
 
 [node name="ParallaxLayer5" type="ParallaxLayer" parent="ParallaxBackground"]
-motion_scale = Vector2( 0.9, 1 )
-motion_offset = Vector2( -80, 0 )
+motion_scale = Vector2( 1.05, 1 )
 
 [node name="beach right" type="Sprite" parent="ParallaxBackground/ParallaxLayer5"]
 texture = ExtResource( 8 )

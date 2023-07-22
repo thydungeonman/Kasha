@@ -53,6 +53,28 @@ var smallholdtimer = 0.0 #just so we KNOW the player is holding
 var sliding = false
 
 
+class State:
+	var i = 0
+	
+	#grab all possible inputs that might matter within the state and act on them
+	func Logic():
+		
+		pass
+	#check for conditions that might change the state and set the state to be changed
+	#possible reset this states values
+	func ConditionsCheck():
+		pass
+
+
+class walkstate:
+	extends State
+
+
+
+
+
+
+
 func _ready():
 	
 #	Engine.time_scale = 2
